@@ -12,6 +12,8 @@ import com.felipestanzani.beyondsight.repository.JavaClassRepository;
 import com.felipestanzani.beyondsight.repository.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
+import com.felipestanzani.beyondsight.exception.ProjectParsingException;
+import com.felipestanzani.beyondsight.exception.FileParsingException;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -47,14 +49,12 @@ public class JavaParsingService implements ParsingService {
     }
 
     public void parseProject(String projectPath) {
-        log.info("Starting project parse at: {}", projectPath);
         try (Stream<Path> stream = Files.walk(Path.of(projectPath))) {
             stream.filter(path -> path.toString().endsWith(".java"))
                     .forEach(this::parseFile);
         } catch (Exception e) {
-            log.error("Failed to walk project path", e);
+            throw new ProjectParsingException(projectPath, e);
         }
-        log.info("Project parse finished.");
     }
 
     public void clearDatabase() {
@@ -73,7 +73,7 @@ public class JavaParsingService implements ParsingService {
             String filePath = javaFile.toAbsolutePath().toString();
             var cu = javaParser.parse(javaFile)
                     .getResult()
-                    .orElseThrow(() -> new RuntimeException("Failed to parse file: " + javaFile));
+                    .orElseThrow(() -> new FileParsingException(javaFile));
 
             cu.findAll(ClassOrInterfaceDeclaration.class).forEach(cls -> {
                 String className = cls.getNameAsString();
@@ -89,7 +89,7 @@ public class JavaParsingService implements ParsingService {
             });
 
         } catch (Exception e) {
-            log.error("Failed to parse file: {}", javaFile, e);
+            throw new FileParsingException(javaFile, e);
         }
     }
 

@@ -26,6 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.aspectj:aspectjrt:1.9.22'
+	implementation 'org.aspectj:aspectjweaver:1.9.22'
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.27.1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'

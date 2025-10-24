@@ -1,5 +1,6 @@
 package com.felipestanzani.beyondsight.exception;
 
+import com.felipestanzani.beyondsight.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,8 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Global exception handler for the application.
@@ -21,15 +20,15 @@ public class GlobalExceptionHandler {
      * Handles ResourceNotFoundException and returns 404 NOT_FOUND.
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
             ResourceNotFoundException ex, WebRequest request) {
 
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now());
-        errorResponse.put("status", HttpStatus.NOT_FOUND.value());
-        errorResponse.put("error", "Not Found");
-        errorResponse.put("message", ex.getMessage());
-        errorResponse.put("path", request.getDescription(false).replace("uri=", ""));
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
@@ -38,32 +37,100 @@ public class GlobalExceptionHandler {
      * Handles ParseAlreadyRunningException and returns 409 CONFLICT.
      */
     @ExceptionHandler(ParseAlreadyRunningException.class)
-    public ResponseEntity<Map<String, Object>> handleParseAlreadyRunningException(
+    public ResponseEntity<ErrorResponse> handleParseAlreadyRunningException(
             ParseAlreadyRunningException ex, WebRequest request) {
 
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now());
-        errorResponse.put("status", HttpStatus.CONFLICT.value());
-        errorResponse.put("error", "Conflict");
-        errorResponse.put("message", ex.getMessage());
-        errorResponse.put("path", request.getDescription(false).replace("uri=", ""));
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    /**
+     * Handles ProjectParsingException and returns 500 INTERNAL_SERVER_ERROR.
+     */
+    @ExceptionHandler(ProjectParsingException.class)
+    public ResponseEntity<ErrorResponse> handleProjectParsingException(
+            ProjectParsingException ex, WebRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Project Parsing Error",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    /**
+     * Handles FileParsingException and returns 500 INTERNAL_SERVER_ERROR.
+     */
+    @ExceptionHandler(FileParsingException.class)
+    public ResponseEntity<ErrorResponse> handleFileParsingException(
+            FileParsingException ex, WebRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "File Parsing Error",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    /**
+     * Handles DatabaseOperationException and returns 500 INTERNAL_SERVER_ERROR.
+     */
+    @ExceptionHandler(DatabaseOperationException.class)
+    public ResponseEntity<ErrorResponse> handleDatabaseOperationException(
+            DatabaseOperationException ex, WebRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Database Operation Error",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    /**
+     * Handles AsyncParsingException and returns 500 INTERNAL_SERVER_ERROR.
+     */
+    @ExceptionHandler(AsyncParsingException.class)
+    public ResponseEntity<ErrorResponse> handleAsyncParsingException(
+            AsyncParsingException ex, WebRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Async Parsing Error",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     /**
      * Handles generic exceptions and returns 500 INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(
+    public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex, WebRequest request) {
 
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now());
-        errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorResponse.put("error", "Internal Server Error");
-        errorResponse.put("message", ex.getMessage());
-        errorResponse.put("path", request.getDescription(false).replace("uri=", ""));
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
