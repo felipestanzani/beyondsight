@@ -1,5 +1,6 @@
 package com.felipestanzani.beyondsight.controller;
 
+import com.felipestanzani.beyondsight.model.ParseStatus;
 import com.felipestanzani.beyondsight.service.interfaces.ProjectIndexingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,5 +24,16 @@ public class TraceabilityController {
     public ResponseEntity<String> indexProject(@RequestParam String path) {
         projectIndexingService.rescanProject(path);
         return ResponseEntity.ok("Project re-scan initiated.");
+    }
+
+    /**
+     * Gets the current status of the parsing operation.
+     * 
+     * @return The current ParseStatus
+     */
+    @GetMapping("/index/status")
+    public ResponseEntity<ParseStatus> getParseStatus() {
+        ParseStatus status = projectIndexingService.getParseStatus();
+        return ResponseEntity.ok(status);
     }
 }

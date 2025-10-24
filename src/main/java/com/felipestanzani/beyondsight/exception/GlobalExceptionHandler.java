@@ -35,6 +35,23 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles ParseAlreadyRunningException and returns 409 CONFLICT.
+     */
+    @ExceptionHandler(ParseAlreadyRunningException.class)
+    public ResponseEntity<Map<String, Object>> handleParseAlreadyRunningException(
+            ParseAlreadyRunningException ex, WebRequest request) {
+
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("status", HttpStatus.CONFLICT.value());
+        errorResponse.put("error", "Conflict");
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    /**
      * Handles generic exceptions and returns 500 INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(Exception.class)
