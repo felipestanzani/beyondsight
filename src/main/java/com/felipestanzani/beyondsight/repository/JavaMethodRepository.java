@@ -1,0 +1,28 @@
+package com.felipestanzani.beyondsight.repository;
+
+import com.felipestanzani.beyondsight.dto.MethodImpactQueryResult;
+import com.felipestanzani.beyondsight.model.JavaMethod;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.neo4j.repository.query.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+public interface JavaMethodRepository extends Neo4jRepository<JavaMethod, String> {
+
+       @Query("MATCH (caller:Method)-[r:CALLS*1..]->(target:Method {name: $methodName}) RETURN DISTINCT caller")
+       List<JavaMethod> findUpstreamCallers(@Param("methodName") String methodName);
+
+       @Query("MATCH (caller:Method {signature: $methodSignature})-[r:CALLS*1..]->(callee:Method) RETURN DISTINCT callee")
+       List<JavaMethod> findDownstreamCallees(@Param("methodSignature") String methodSignature);
+
+       @Query("""
+                     MATCH (target:Method {signature: $methodSignature})
+                     MATCH (caller:Method)-[:CALLS*1..]->(target)
+                     MATCH (c:Class)-[:CONTAINS]->(caller)
+                     RETURN DISTINCT c.name as className, c.filePath as filePath,
+                            caller.name as methodName, caller.signature as methodSignature, caller.filePath as methodFilePath,
+                            'CALLS' as impactType
+                     """)
+       List<MethodImpactQueryResult> findFullMethodImpact(@Param("methodSignature") String methodSignature);
+}

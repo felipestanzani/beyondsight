@@ -1,0 +1,14 @@
+services:
+  neo4j:
+    image: neo4j:latest
+    environment:
+      - NEO4J_AUTH=neo4j/notverysecret
+    ports:
+      - "7687:7687"
+      - "7474:7474"
+    volumes:
+      - neo4j_data:/var/lib/neo4j/data
+
+volumes:
+  neo4j_data:
+    driver: local
