@@ -29,8 +29,9 @@ public class ImpactMcpController {
      */
     @Tool(description = "Gets full transitive impact analysis for a field. " +
             "Returns hierarchical structure showing all classes and methods affected by changing the field.")
-    public Map<String, Object> getFieldImpact(@ToolParam(description = "The name of the class that contains the field") String className,
-                                 @ToolParam(description = "The name of the field to be analyzed") String fieldName) {
+    public Map<String, Object> getFieldImpact(
+            @ToolParam(description = "The name of the class that contains the field") String className,
+            @ToolParam(description = "The name of the field to be analyzed") String fieldName) {
         FieldImpactResponse response = mcpImpactService.getFullFieldImpact(fieldName, className);
 
         Map<String, Object> mcpResponse = new HashMap<>();
@@ -46,7 +47,8 @@ public class ImpactMcpController {
      */
     @Tool(description = "Gets full transitive impact analysis for a method. " +
             "Returns hierarchical structure showing all classes and methods affected by changing the method.")
-    public Map<String, Object> getMethodImpact(@ToolParam(description = "Signature of the method to be analyzed") String methodSignature) {
+    public Map<String, Object> getMethodImpact(
+            @ToolParam(description = "Signature of the method to be analyzed") String methodSignature) {
         MethodImpactResponse response = mcpImpactService.getFullMethodImpact(methodSignature);
 
         Map<String, Object> mcpResponse = new HashMap<>();
