@@ -1,0 +1,10 @@
+{
+    "mcpServers": {
+        "beyondsight-mcp-server": {
+            "command": "node",
+            "args": [
+                "/Users/Stanzani/Development/clarificode/mcp-bridge.js"
+            ]
+        }
+    }
+}

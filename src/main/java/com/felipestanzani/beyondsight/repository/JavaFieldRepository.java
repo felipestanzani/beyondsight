@@ -23,6 +23,9 @@ public interface JavaFieldRepository extends Neo4jRepository<JavaField, String> 
                      MATCH (m:Method)-[r:WRITES|READS]->(f)
                      MATCH (c2:Class)-[:CONTAINS]->(m2:Method)
                      WHERE (m2)-[:CALLS*1..]->(m) OR m2 = m
+                     RETURN DISTINCT c2.name as className, c2.filePath as filePath,
+                            m2.name as methodName, m2.signature as methodSignature, m2.filePath as methodFilePath,
+                            type(r) as impactType
 
                      UNION
 
@@ -33,6 +36,9 @@ public interface JavaFieldRepository extends Neo4jRepository<JavaField, String> 
                      MATCH (m:Method)-[r:WRITES|READS]->(inheritedField)
                      MATCH (c2:Class)-[:CONTAINS]->(m2:Method)
                      WHERE (m2)-[:CALLS*1..]->(m) OR m2 = m
+                     RETURN DISTINCT c2.name as className, c2.filePath as filePath,
+                            m2.name as methodName, m2.signature as methodSignature, m2.filePath as methodFilePath,
+                            type(r) as impactType
 
                      UNION
 
@@ -45,7 +51,6 @@ public interface JavaFieldRepository extends Neo4jRepository<JavaField, String> 
                      AND similarMethod <> originalMethod
                      MATCH (c2:Class)-[:CONTAINS]->(m2:Method)
                      WHERE (m2)-[:CALLS*1..]->(similarMethod) OR m2 = similarMethod
-
                      RETURN DISTINCT c2.name as className, c2.filePath as filePath,
                             m2.name as methodName, m2.signature as methodSignature, m2.filePath as methodFilePath,
                             type(r) as impactType
