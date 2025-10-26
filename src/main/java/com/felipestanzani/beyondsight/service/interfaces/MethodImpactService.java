@@ -1,14 +1,7 @@
 package com.felipestanzani.beyondsight.service.interfaces;
 
-import com.felipestanzani.beyondsight.dto.MethodImpactResponseDto;
-import com.felipestanzani.beyondsight.model.JavaMethod;
-
-import java.util.List;
+import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 
 public interface MethodImpactService {
-    List<JavaMethod> getUpstreamCallers(String methodName);
-
-    List<JavaMethod> getDownstreamCallees(String methodSignature);
-
-    MethodImpactResponseDto getFullMethodImpact(String methodSignature);
+    MethodImpactResponse getFullMethodImpact(String methodSignature);
 }

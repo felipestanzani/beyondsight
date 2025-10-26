@@ -2,18 +2,15 @@ package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.FieldImpactResponse;
-import com.felipestanzani.beyondsight.dto.MethodImpactResponseDto;
+import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.exception.McpResourceNotFoundException;
 import com.felipestanzani.beyondsight.exception.McpInvalidParameterException;
 import com.felipestanzani.beyondsight.exception.McpInternalErrorException;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
-import com.felipestanzani.beyondsight.model.JavaMethod;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * MCP-specific service layer that wraps existing impact analysis services.
@@ -34,104 +31,6 @@ public class McpImpactService {
         this.fieldImpactService = fieldImpactService;
         this.methodImpactService = methodImpactService;
         this.classImpactService = classImpactService;
-    }
-
-    /**
-     * Finds all methods that write to a specific field.
-     * 
-     * @param fieldName the name of the field to find writers for
-     * @return list of methods that write to the field
-     * @throws McpInvalidParameterException if fieldName is null or empty
-     * @throws McpResourceNotFoundException if no writers are found
-     */
-    public List<JavaMethod> getFieldWriters(String fieldName) {
-        validateFieldName(fieldName);
-
-        try {
-            List<JavaMethod> writers = fieldImpactService.getFieldWriters(fieldName);
-            if (writers.isEmpty()) {
-                throw new McpResourceNotFoundException("No methods found that write to field: " + fieldName);
-            }
-            return writers;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No methods found that write to field: " + fieldName);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving field writers: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Finds all methods that read from a specific field.
-     * 
-     * @param fieldName the name of the field to find readers for
-     * @return list of methods that read from the field
-     * @throws McpInvalidParameterException if fieldName is null or empty
-     * @throws McpResourceNotFoundException if no readers are found
-     */
-    public List<JavaMethod> getFieldReaders(String fieldName) {
-        validateFieldName(fieldName);
-
-        try {
-            List<JavaMethod> readers = fieldImpactService.getFieldReaders(fieldName);
-            if (readers.isEmpty()) {
-                throw new McpResourceNotFoundException("No methods found that read from field: " + fieldName);
-            }
-            return readers;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No methods found that read from field: " + fieldName);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving field readers: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Finds all methods that directly or indirectly call a target method (upstream
-     * analysis).
-     * 
-     * @param methodName the name of the method to find callers for
-     * @return list of methods that call the target method
-     * @throws McpInvalidParameterException if methodName is null or empty
-     * @throws McpResourceNotFoundException if no callers are found
-     */
-    public List<JavaMethod> getUpstreamCallers(String methodName) {
-        validateMethodName(methodName);
-
-        try {
-            List<JavaMethod> callers = methodImpactService.getUpstreamCallers(methodName);
-            if (callers.isEmpty()) {
-                throw new McpResourceNotFoundException("No methods found that call: " + methodName);
-            }
-            return callers;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No methods found that call: " + methodName);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving upstream callers: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Finds all methods that are directly or indirectly called by a target method
-     * (downstream analysis).
-     * 
-     * @param methodSignature the signature of the method to find callees for
-     * @return list of methods called by the target method
-     * @throws McpInvalidParameterException if methodSignature is null or empty
-     * @throws McpResourceNotFoundException if no callees are found
-     */
-    public List<JavaMethod> getDownstreamCallees(String methodSignature) {
-        validateMethodSignature(methodSignature);
-
-        try {
-            List<JavaMethod> callees = methodImpactService.getDownstreamCallees(methodSignature);
-            if (callees.isEmpty()) {
-                throw new McpResourceNotFoundException("No methods found that are called by: " + methodSignature);
-            }
-            return callees;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No methods found that are called by: " + methodSignature);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving downstream callees: " + e.getMessage(), e);
-        }
     }
 
     /**
@@ -173,11 +72,11 @@ public class McpImpactService {
      * @throws McpInvalidParameterException if methodSignature is null or empty
      * @throws McpResourceNotFoundException if method is not found
      */
-    public MethodImpactResponseDto getFullMethodImpact(String methodSignature) {
+    public MethodImpactResponse getFullMethodImpact(String methodSignature) {
         validateMethodSignature(methodSignature);
 
         try {
-            MethodImpactResponseDto response = methodImpactService.getFullMethodImpact(methodSignature);
+            MethodImpactResponse response = methodImpactService.getFullMethodImpact(methodSignature);
             if (response == null) {
                 throw new McpResourceNotFoundException("No impact analysis found for method: " + methodSignature);
             }
@@ -219,12 +118,6 @@ public class McpImpactService {
     private void validateFieldName(String fieldName) {
         if (fieldName == null || fieldName.trim().isEmpty()) {
             throw new McpInvalidParameterException("Field name cannot be null or empty");
-        }
-    }
-
-    private void validateMethodName(String methodName) {
-        if (methodName == null || methodName.trim().isEmpty()) {
-            throw new McpInvalidParameterException("Method name cannot be null or empty");
         }
     }
 

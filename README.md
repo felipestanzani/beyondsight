@@ -62,6 +62,56 @@ This will start Neo4j on:
 
 The application will start on `http://localhost:8080`
 
+### 4. Configure MCP Server in Cursor (Optional)
+
+To use BeyondSight's impact analysis tools directly within Cursor AI, you can configure the MCP server:
+
+#### Step 1: Ensure the Application is Running
+
+Make sure BeyondSight is running on `http://localhost:8080` (see step 3 above).
+
+#### Step 2: Configure Cursor MCP Settings
+
+1. Open Cursor and go to **Settings** → **Features** → **Model Context Protocol**
+2. Add the following configuration to your MCP settings file (usually located at `~/.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "beyondsight-mcp-server": {
+      "command": "node",
+      "args": [
+        "/path/to/your/beyondsight/mcp-bridge.js"
+      ]
+    }
+  }
+}
+```
+
+**Important**: Replace `/path/to/your/beyondsight/` with the actual absolute path to your BeyondSight project directory.
+
+#### Step 3: Restart Cursor
+
+After adding the configuration, restart Cursor for the changes to take effect.
+
+#### Step 4: Verify MCP Integration
+
+Once configured, you can use the following MCP tools directly in Cursor:
+
+- `getClassImpact` - Get full transitive impact analysis for a class
+- `getMethodImpact` - Get full transitive impact analysis for a method  
+- `getFieldImpact` - Get full transitive impact analysis for a field
+
+These tools will be available in Cursor's AI assistant and can analyze your Java codebase for impact analysis.
+
+#### Example Usage in Cursor
+
+After configuration, you can ask Cursor questions like:
+
+- "What would be impacted if I change the `UserService` class?"
+- "Show me the impact analysis for the `calculateTotal()` method"
+- "Which methods would be affected if I modify the `userName` field?"
+
 ## API Endpoints
 
 ### Project Indexing
@@ -82,37 +132,23 @@ POST /api/v1/index/rescan?path=/absolute/path/to/java/project
 
 BeyondSight provides MCP endpoints for LLM integration, allowing AI assistants to perform code impact analysis directly.
 
-#### MCP Server Information
-
-```http
-GET /api/v1/mcp/impact/info
-```
-
-**Description**: Returns MCP server information including name, version, and protocol.
-
 #### Available MCP Tools
 
 ```http
-GET /api/v1/mcp/impact/tools
+GET /api/v1/mcp/tools
 ```
 
 **Description**: Lists all available MCP tools with their schemas and descriptions.
 
 #### MCP Tool Endpoints
 
-All MCP tools are available at `/api/v1/mcp/impact/tools/{toolName}` and accept JSON-RPC 2.0 format requests.
+All MCP tools are available at `/api/v1/mcp/tools/{toolName}` and accept POST requests with JSON payloads.
 
 **Available Tools**:
 
-- `getFieldWriters` - Find methods that write to a field
-- `getFieldReaders` - Find methods that read from a field  
-- `getUpstreamCallers` - Find methods that call a target method
-- `getDownstreamCallees` - Find methods called by a target method
-- `getFullFieldImpact` - Complete field impact analysis
-- `getFullMethodImpact` - Complete method impact analysis
-- `getFullClassImpact` - Complete class impact analysis
-
-For detailed MCP usage instructions, see [INSTRUCTIONS.md](INSTRUCTIONS.md).
+- `getFieldImpact` - Get full transitive impact analysis for a field
+- `getMethodImpact` - Get full transitive impact analysis for a method
+- `getClassImpact` - Get full transitive impact analysis for a class
 
 ### Impact Analysis
 
@@ -184,26 +220,19 @@ curl -X POST "http://localhost:8080/api/v1/index/rescan?path=/Users/username/my-
 
 ### 2. MCP Integration Examples
 
-#### Get MCP Server Information
-
-```bash
-curl "http://localhost:8080/api/v1/mcp/impact/info"
-```
-
 #### Get Available MCP Tools
 
 ```bash
-curl "http://localhost:8080/api/v1/mcp/impact/tools"
+curl "http://localhost:8080/api/v1/mcp/tools"
 ```
 
-#### Call MCP Tool (Field Writers)
+#### Call MCP Tool (Field Impact)
 
 ```bash
-curl -X POST "http://localhost:8080/api/v1/mcp/impact/tools/getFieldWriters" \
+curl -X POST "http://localhost:8080/api/v1/mcp/tools/getFieldImpact" \
   -H "Content-Type: application/json" \
   -d '{
-    "jsonrpc": "2.0",
-    "id": "1",
+    "className": "UserService",
     "fieldName": "userName"
   }'
 ```

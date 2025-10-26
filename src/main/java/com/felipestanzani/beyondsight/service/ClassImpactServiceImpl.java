@@ -2,13 +2,14 @@ package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.ClassImpactQueryResult;
-import com.felipestanzani.beyondsight.dto.ImpactedFieldDto;
-import com.felipestanzani.beyondsight.dto.ImpactedMethodDto;
+import com.felipestanzani.beyondsight.dto.ImpactedFieldResponse;
+import com.felipestanzani.beyondsight.dto.ImpactedMethodResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.repository.JavaClassRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,9 +47,9 @@ public class ClassImpactServiceImpl implements ClassImpactService {
                                 Collectors.toList(),
                                 rows -> {
                                     String filePath = rows.getFirst().filePath();
-                                    List<ImpactedMethodDto> methods = rows.stream()
+                                    List<ImpactedMethodResponse> methods = rows.stream()
                                             .filter(row -> row.methodName() != null)
-                                            .map(row -> new ImpactedMethodDto(
+                                            .map(row -> new ImpactedMethodResponse(
                                                     row.methodName(),
                                                     row.methodSignature(),
                                                     row.methodFilePath(),
@@ -75,8 +76,8 @@ public class ClassImpactServiceImpl implements ClassImpactService {
             ClassImpactResponse existing = classMap.get(classNameKey);
             if (existing != null) {
                 // Add field to existing class
-                List<ImpactedFieldDto> newFields = new java.util.ArrayList<>(existing.impactedFields());
-                newFields.add(new ImpactedFieldDto(fieldName, fieldType, impactType));
+                List<ImpactedFieldResponse> newFields = new ArrayList<>(existing.impactedFields());
+                newFields.add(new ImpactedFieldResponse(fieldName, fieldType, impactType));
                 classMap.put(classNameKey, new ClassImpactResponse(
                         existing.name(),
                         existing.filePath(),
@@ -90,7 +91,7 @@ public class ClassImpactServiceImpl implements ClassImpactService {
                         filePath,
                         null,
                         List.of(),
-                        List.of(new ImpactedFieldDto(fieldName, fieldType, impactType))));
+                        List.of(new ImpactedFieldResponse(fieldName, fieldType, impactType))));
             }
         });
 
@@ -106,8 +107,8 @@ public class ClassImpactServiceImpl implements ClassImpactService {
             ClassImpactResponse existing = classMap.get(classNameKey);
             if (existing != null) {
                 // Add method to existing class
-                List<ImpactedMethodDto> newMethods = new java.util.ArrayList<>(existing.impactedMethods());
-                newMethods.add(new ImpactedMethodDto(methodName, methodSignature, methodFilePath, impactType));
+                List<ImpactedMethodResponse> newMethods = new java.util.ArrayList<>(existing.impactedMethods());
+                newMethods.add(new ImpactedMethodResponse(methodName, methodSignature, methodFilePath, impactType));
                 classMap.put(classNameKey, new ClassImpactResponse(
                         existing.name(),
                         existing.filePath(),
@@ -120,7 +121,7 @@ public class ClassImpactServiceImpl implements ClassImpactService {
                         classNameKey,
                         filePath,
                         null,
-                        List.of(new ImpactedMethodDto(methodName, methodSignature, methodFilePath, impactType)),
+                        List.of(new ImpactedMethodResponse(methodName, methodSignature, methodFilePath, impactType)),
                         List.of()));
             }
         });

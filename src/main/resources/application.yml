@@ -1,12 +1,24 @@
 spring:
   application:
     name: beyondsight
+    version: 1.0.0
 
   neo4j:
     uri: bolt://localhost:7687
     authentication:
       username: neo4j
       password: notverysecret
+
+  ai:
+    mcp:
+      server:
+        name: beyondsight-mcp-server
+        version: 1.0.0
+        type: SYNC
+        instructions: "This server provides code impact change information"
+        sse-message-endpoint: /mcp/message
+        capabilities:
+          tool: true
 
 logging:
   level:
