@@ -3,10 +3,8 @@ package com.felipestanzani.beyondsight.service;
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.FieldImpactQueryResult;
 import com.felipestanzani.beyondsight.dto.FieldImpactResponse;
-import com.felipestanzani.beyondsight.dto.Method;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.mappers.JavaClassMapper;
-import com.felipestanzani.beyondsight.model.JavaMethod;
 import com.felipestanzani.beyondsight.repository.JavaFieldRepository;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import org.springframework.stereotype.Service;
@@ -21,40 +19,6 @@ public class FieldImpactServiceImpl implements FieldImpactService {
 
     public FieldImpactServiceImpl(JavaFieldRepository fieldRepository) {
         this.fieldRepository = fieldRepository;
-    }
-
-    /**
-     * Finds all methods that WRITE to a specific field.
-     * 
-     * @param fieldName The name of the field to analyze
-     * @return List of methods that write to the field
-     */
-    @Override
-    public List<JavaMethod> getFieldWriters(String fieldName) {
-        List<Method> dtos = fieldRepository.findMethodsWritingToField(fieldName);
-        if (dtos.isEmpty()) {
-            throw new ResourceNotFoundException("field", fieldName);
-        }
-        return dtos.stream()
-                .map(dto -> new JavaMethod(dto.name(), dto.signature(), dto.filePath()))
-                .toList();
-    }
-
-    /**
-     * Finds all methods that READ a specific field.
-     * 
-     * @param fieldName The name of the field to analyze
-     * @return List of methods that read from the field
-     */
-    @Override
-    public List<JavaMethod> getFieldReaders(String fieldName) {
-        List<Method> dtos = fieldRepository.findMethodsReadingFromField(fieldName);
-        if (dtos.isEmpty()) {
-            throw new ResourceNotFoundException("field", fieldName);
-        }
-        return dtos.stream()
-                .map(dto -> new JavaMethod(dto.name(), dto.signature(), dto.filePath()))
-                .toList();
     }
 
     /**
