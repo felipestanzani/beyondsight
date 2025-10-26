@@ -16,6 +16,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
 }
 
 ext {
@@ -29,6 +30,7 @@ dependencies {
 	implementation 'org.aspectj:aspectjrt:1.9.22'
 	implementation 'org.aspectj:aspectjweaver:1.9.22'
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.27.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

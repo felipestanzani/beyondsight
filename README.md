@@ -11,9 +11,11 @@ BeyondSight analyzes Java projects to extract code structure and relationships, 
 - **Java Project Parsing**: Automatically parses Java source code and extracts classes, methods, and fields
 - **Graph Database Storage**: Stores code relationships in Neo4j for efficient querying
 - **REST API**: Comprehensive API for impact analysis queries
+- **MCP Integration**: Model Context Protocol (MCP) server for LLM integration
 - **Transitive Dependency Tracking**: Find upstream callers and downstream callees
 - **Hierarchical Impact Analysis**: Get complete impact reports with class and method hierarchies
 - **Line Number Tracking**: Precise location tracking for all code relationships
+- **LLM-Ready Tools**: Pre-configured tools for AI assistants to perform code impact analysis
 
 ## Tech Stack
 
@@ -35,7 +37,7 @@ BeyondSight analyzes Java projects to extract code structure and relationships, 
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:felipestanzani/beyondsight.git
 cd beyondsight
 ```
 
@@ -75,6 +77,42 @@ POST /api/v1/index/rescan?path=/absolute/path/to/java/project
 **Parameters**:
 
 - `path` (required): Absolute file path to the root of the Java project
+
+### MCP (Model Context Protocol) Integration
+
+BeyondSight provides MCP endpoints for LLM integration, allowing AI assistants to perform code impact analysis directly.
+
+#### MCP Server Information
+
+```http
+GET /api/v1/mcp/impact/info
+```
+
+**Description**: Returns MCP server information including name, version, and protocol.
+
+#### Available MCP Tools
+
+```http
+GET /api/v1/mcp/impact/tools
+```
+
+**Description**: Lists all available MCP tools with their schemas and descriptions.
+
+#### MCP Tool Endpoints
+
+All MCP tools are available at `/api/v1/mcp/impact/tools/{toolName}` and accept JSON-RPC 2.0 format requests.
+
+**Available Tools**:
+
+- `getFieldWriters` - Find methods that write to a field
+- `getFieldReaders` - Find methods that read from a field  
+- `getUpstreamCallers` - Find methods that call a target method
+- `getDownstreamCallees` - Find methods called by a target method
+- `getFullFieldImpact` - Complete field impact analysis
+- `getFullMethodImpact` - Complete method impact analysis
+- `getFullClassImpact` - Complete class impact analysis
+
+For detailed MCP usage instructions, see [INSTRUCTIONS.md](INSTRUCTIONS.md).
 
 ### Impact Analysis
 
@@ -144,25 +182,53 @@ GET /api/v1/impact/class/full?className=ClassName
 curl -X POST "http://localhost:8080/api/v1/index/rescan?path=/Users/username/my-java-project"
 ```
 
-### 2. Find Methods Writing to a Field
+### 2. MCP Integration Examples
+
+#### Get MCP Server Information
+
+```bash
+curl "http://localhost:8080/api/v1/mcp/impact/info"
+```
+
+#### Get Available MCP Tools
+
+```bash
+curl "http://localhost:8080/api/v1/mcp/impact/tools"
+```
+
+#### Call MCP Tool (Field Writers)
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/mcp/impact/tools/getFieldWriters" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "1",
+    "fieldName": "userName"
+  }'
+```
+
+### 3. Traditional REST API Examples
+
+#### Find Methods Writing to a Field
 
 ```bash
 curl "http://localhost:8080/api/v1/impact/field-writers?fieldName=userName"
 ```
 
-### 3. Find Upstream Callers of a Method
+#### Find Upstream Callers of a Method
 
 ```bash
 curl "http://localhost:8080/api/v1/impact/upstream-callers?methodName=calculateTotal"
 ```
 
-### 4. Get Full Method Impact Analysis
+#### Get Full Method Impact Analysis
 
 ```bash
 curl "http://localhost:8080/api/v1/impact/method/full?methodSignature=calculateTotal()"
 ```
 
-### 5. Get Full Class Impact Analysis
+#### Get Full Class Impact Analysis
 
 ```bash
 curl "http://localhost:8080/api/v1/impact/class/full?className=UserService"

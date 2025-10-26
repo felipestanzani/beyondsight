@@ -33,7 +33,7 @@ public class ImpactController {
     /**
      * Finds all methods that WRITE to a specific field.
      */
-    @GetMapping("/field-writers")
+    @GetMapping("/field/writers")
     public ResponseEntity<List<JavaMethod>> getFieldWriters(@RequestParam String fieldName) {
         List<JavaMethod> methods = fieldImpactService.getFieldWriters(fieldName);
         return ResponseEntity.ok(methods);
@@ -42,7 +42,7 @@ public class ImpactController {
     /**
      * Finds all methods that READ a specific field.
      */
-    @GetMapping("/field-readers")
+    @GetMapping("/field/readers")
     public ResponseEntity<List<JavaMethod>> getFieldReaders(@RequestParam String fieldName) {
         List<JavaMethod> methods = fieldImpactService.getFieldReaders(fieldName);
         return ResponseEntity.ok(methods);
@@ -52,7 +52,7 @@ public class ImpactController {
      * Finds all methods that (directly or indirectly) CALL a target method.
      * This is a "who calls me?" or "upstream" analysis.
      */
-    @GetMapping("/upstream-callers")
+    @GetMapping("/upstream/callers")
     public ResponseEntity<List<JavaMethod>> getUpstreamCallers(@RequestParam String methodName) {
         List<JavaMethod> methods = methodImpactService.getUpstreamCallers(methodName);
         return ResponseEntity.ok(methods);
@@ -62,7 +62,7 @@ public class ImpactController {
      * Killer Query: Finds all methods that (directly or indirectly) are CALLED BY
      * a target method. This is a "who do I call?" or "downstream" analysis.
      */
-    @GetMapping("/downstream-callees")
+    @GetMapping("/downstream/callees")
     public ResponseEntity<List<JavaMethod>> getDownstreamCallees(@RequestParam String methodSignature) {
         List<JavaMethod> methods = methodImpactService.getDownstreamCallees(methodSignature);
         return ResponseEntity.ok(methods);
