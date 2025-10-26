@@ -1,7 +1,8 @@
 package com.felipestanzani.beyondsight.dto;
 
-public record ImpactedFieldDto(
+public record ImpactedMethodResponse(
                 String name,
-                String type,
+                String signature,
+                String filePath,
                 String impactType) {
 }
