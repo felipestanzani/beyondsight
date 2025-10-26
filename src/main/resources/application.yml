@@ -17,6 +17,8 @@ spring:
         type: SYNC
         instructions: "This server provides code impact change information"
         sse-message-endpoint: /mcp/message
+        enabled: true
+        protocol: SSE        
         capabilities:
           tool: true
 

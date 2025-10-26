@@ -79,16 +79,24 @@ Make sure BeyondSight is running on `http://localhost:8080` (see step 3 above).
 {
   "mcpServers": {
     "beyondsight-mcp-server": {
-      "command": "node",
-      "args": [
-        "/path/to/your/beyondsight/mcp-bridge.js"
-      ]
+      "transport": "sse",
+      "url": "http://localhost:8080/sse",
+      "capabilities": {
+        "tool": true
+      },
+      "name": "beyondsight-mcp-server",
+      "version": "1.0.0",
+      "type": "SYNC",
+      "instructions": "This server provides code impact change information",
+      "sse-message-endpoint": "http://localhost:8080/mcp/message",
+      "heartbeatIntervalMs": 15000,
+      "reconnectAttempts": 5
     }
   }
 }
 ```
 
-**Important**: Replace `/path/to/your/beyondsight/` with the actual absolute path to your BeyondSight project directory.
+**Note**: This configuration uses Server-Sent Events (SSE) to communicate with the BeyondSight server.
 
 #### Step 3: Restart Cursor
 
@@ -96,21 +104,70 @@ After adding the configuration, restart Cursor for the changes to take effect.
 
 #### Step 4: Verify MCP Integration
 
-Once configured, you can use the following MCP tools directly in Cursor:
+Once configured, you can use the MCP tools directly in Cursor's AI assistant.
 
-- `getClassImpact` - Get full transitive impact analysis for a class
-- `getMethodImpact` - Get full transitive impact analysis for a method  
-- `getFieldImpact` - Get full transitive impact analysis for a field
+### Available MCP Tools
 
-These tools will be available in Cursor's AI assistant and can analyze your Java codebase for impact analysis.
+BeyondSight provides the following MCP tools for impact analysis:
 
-#### Example Usage in Cursor
+#### 1. getClassImpact
+
+**Description**: Gets full transitive impact analysis for a class. Returns hierarchical structure showing all classes and methods affected by changing the class.
+
+**Parameters**:
+
+- `className` (string, required): Name of the class to analyze
+
+**Returns**: Hierarchical structure showing all affected classes and methods
+
+**Example**:
+
+```java
+getClassImpact(className: "UserService")
+```
+
+#### 2. getMethodImpact
+
+**Description**: Gets full transitive impact analysis for a method. Returns hierarchical structure showing all classes and methods affected by changing the method.
+
+**Parameters**:
+
+- `methodSignature` (string, required): Signature of the method to analyze (e.g., `calculateTotal()`)
+
+**Returns**: Hierarchical structure showing all affected classes and methods
+
+**Example**:
+
+```java
+getMethodImpact(methodSignature: "calculateTotal()")
+```
+
+#### 3. getFieldImpact
+
+**Description**: Gets full transitive impact analysis for a field. Returns hierarchical structure showing all classes and methods affected by changing the field.
+
+**Parameters**:
+
+- `className` (string, required): Name of the class that contains the field
+- `fieldName` (string, required): Name of the field to analyze
+
+**Returns**: Hierarchical structure showing all affected classes and methods
+
+**Example**:
+
+```java
+getFieldImpact(className: "UserService", fieldName: "userName")
+```
+
+### Using MCP Tools in Cursor
 
 After configuration, you can ask Cursor questions like:
 
 - "What would be impacted if I change the `UserService` class?"
 - "Show me the impact analysis for the `calculateTotal()` method"
 - "Which methods would be affected if I modify the `userName` field?"
+
+These tools will automatically be available in Cursor's AI assistant and can analyze your Java codebase for impact analysis.
 
 ## API Endpoints
 
@@ -128,45 +185,19 @@ POST /api/v1/index/rescan?path=/absolute/path/to/java/project
 
 - `path` (required): Absolute file path to the root of the Java project
 
-### MCP (Model Context Protocol) Integration
-
-BeyondSight provides MCP endpoints for LLM integration, allowing AI assistants to perform code impact analysis directly.
-
-#### Available MCP Tools
+#### Get Parse Status
 
 ```http
-GET /api/v1/mcp/tools
+GET /api/v1/index/status
 ```
 
-**Description**: Lists all available MCP tools with their schemas and descriptions.
+**Description**: Gets the current status of the parsing operation.
 
-#### MCP Tool Endpoints
-
-All MCP tools are available at `/api/v1/mcp/tools/{toolName}` and accept POST requests with JSON payloads.
-
-**Available Tools**:
-
-- `getFieldImpact` - Get full transitive impact analysis for a field
-- `getMethodImpact` - Get full transitive impact analysis for a method
-- `getClassImpact` - Get full transitive impact analysis for a class
+**Returns**: JSON object with parse status information including `status`, `message`, and `timestamp`.
 
 ### Impact Analysis
 
 #### Field Impact Analysis
-
-##### Find Methods Writing to a Field
-
-```http
-GET /api/v1/impact/field-writers?fieldName=fieldName
-```
-
-##### Find Methods Reading a Field
-
-```http
-GET /api/v1/impact/field-readers?fieldName=fieldName
-```
-
-##### Full Field Impact Analysis
 
 ```http
 GET /api/v1/impact/field/full?fieldName=fieldName&className=ClassName
@@ -174,25 +205,12 @@ GET /api/v1/impact/field/full?fieldName=fieldName&className=ClassName
 
 **Description**: Returns hierarchical structure showing all classes and methods affected by changing the field.
 
+**Parameters**:
+
+- `fieldName` (required): The name of the field to analyze
+- `className` (required): The name of the class containing the field
+
 #### Method Impact Analysis
-
-##### Find Upstream Callers
-
-```http
-GET /api/v1/impact/upstream-callers?methodName=methodName
-```
-
-**Description**: Finds all methods that (directly or indirectly) call a target method ("who calls me?" analysis).
-
-##### Find Downstream Callees
-
-```http
-GET /api/v1/impact/downstream-callees?methodSignature=methodSignature
-```
-
-**Description**: Finds all methods that (directly or indirectly) are called by a target method ("who do I call?" analysis).
-
-##### Full Method Impact Analysis
 
 ```http
 GET /api/v1/impact/method/full?methodSignature=methodSignature
@@ -200,15 +218,21 @@ GET /api/v1/impact/method/full?methodSignature=methodSignature
 
 **Description**: Returns hierarchical structure showing all classes and methods affected by changing the method.
 
-#### Class Impact Analysis
+**Parameters**:
 
-##### Full Class Impact Analysis
+- `methodSignature` (required): The full method signature (e.g., `calculateTotal()`)
+
+#### Class Impact Analysis
 
 ```http
 GET /api/v1/impact/class/full?className=ClassName
 ```
 
 **Description**: Returns hierarchical structure showing all classes and methods affected by changing the class.
+
+**Parameters**:
+
+- `className` (required): The name of the class to analyze
 
 ## Usage Examples
 
@@ -218,37 +242,18 @@ GET /api/v1/impact/class/full?className=ClassName
 curl -X POST "http://localhost:8080/api/v1/index/rescan?path=/Users/username/my-java-project"
 ```
 
-### 2. MCP Integration Examples
-
-#### Get Available MCP Tools
+### 2. Check Parse Status
 
 ```bash
-curl "http://localhost:8080/api/v1/mcp/tools"
+curl "http://localhost:8080/api/v1/index/status"
 ```
 
-#### Call MCP Tool (Field Impact)
+### 3. Impact Analysis Examples
+
+#### Get Full Field Impact Analysis
 
 ```bash
-curl -X POST "http://localhost:8080/api/v1/mcp/tools/getFieldImpact" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "className": "UserService",
-    "fieldName": "userName"
-  }'
-```
-
-### 3. Traditional REST API Examples
-
-#### Find Methods Writing to a Field
-
-```bash
-curl "http://localhost:8080/api/v1/impact/field-writers?fieldName=userName"
-```
-
-#### Find Upstream Callers of a Method
-
-```bash
-curl "http://localhost:8080/api/v1/impact/upstream-callers?methodName=calculateTotal"
+curl "http://localhost:8080/api/v1/impact/field/full?fieldName=userName&className=UserService"
 ```
 
 #### Get Full Method Impact Analysis
@@ -333,7 +338,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Author
 
-**Felipe Cesar Stanzani Fonseca**
+**[Felipe Cesar Stanzani Fonseca](https://felipestanzani.com)**
 
 ---
 
