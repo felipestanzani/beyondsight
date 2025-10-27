@@ -26,8 +26,16 @@ public class JavaClass extends Element {
     private List<ClassMethodRelationship> methods = new ArrayList<>();
 
     public JavaClass(String name, String filePath) {
-        this.name = name;
+        super(name);
         this.filePath = filePath;
+    }
+
+    public void addField(JavaField field, Integer lineNumber) {
+        this.fields.add(new ClassFieldRelationship(field, lineNumber));
+    }
+
+    public void addMethod(JavaMethod savedJavaMethod, Integer lineNumber) {
+        this.methods.add(new ClassMethodRelationship(savedJavaMethod, lineNumber));
     }
 
     @Override

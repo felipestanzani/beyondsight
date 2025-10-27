@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.felipestanzani'
 version = '0.0.1-SNAPSHOT'
-description = 'Carificode - code dependency analyzer'
+description = 'BeyondSight - code dependency analyzer'
 
 java {
 	toolchain {

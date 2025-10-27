@@ -3,11 +3,6 @@ package com.felipestanzani.beyondsight.service;
 import com.felipestanzani.beyondsight.model.java.JavaClass;
 import com.felipestanzani.beyondsight.model.java.JavaField;
 import com.felipestanzani.beyondsight.model.java.JavaMethod;
-import com.felipestanzani.beyondsight.model.ClassFieldRelationship;
-import com.felipestanzani.beyondsight.model.ClassMethodRelationship;
-import com.felipestanzani.beyondsight.model.MethodCallRelationship;
-import com.felipestanzani.beyondsight.model.MethodFieldReadRelationship;
-import com.felipestanzani.beyondsight.model.MethodFieldWriteRelationship;
 import com.felipestanzani.beyondsight.repository.JavaClassRepository;
 import com.felipestanzani.beyondsight.repository.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.JavaMethodRepository;
@@ -16,6 +11,7 @@ import com.felipestanzani.beyondsight.exception.ProjectParsingException;
 import com.felipestanzani.beyondsight.exception.FileParsingException;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -86,6 +82,7 @@ public class JavaParsingService implements ParsingService {
                 cls.getMethods().forEach(method -> createMethods(filePath, savedJavaClass, method));
 
                 classRepository.save(savedJavaClass);
+                log.warn("Neo4j parsing finished");
             });
 
         } catch (Exception e) {
@@ -99,10 +96,7 @@ public class JavaParsingService implements ParsingService {
             JavaField field = new JavaField(fieldName);
             var savedField = fieldRepository.save(field);
 
-            // Extract line number from the field declaration
-            Integer lineNumber = fieldDecl.getBegin().map(range -> range.line).orElse(null);
-            ClassFieldRelationship fieldRel = new ClassFieldRelationship(savedField, lineNumber);
-            javaClass.getFields().add(fieldRel);
+            javaClass.addField(savedField, getLineNumber(fieldDecl));
         });
     }
 
@@ -113,10 +107,7 @@ public class JavaParsingService implements ParsingService {
         JavaMethod javaMethod = new JavaMethod(methodName, methodSignature, filePath);
         var savedJavaMethod = methodRepository.save(javaMethod);
 
-        // Extract line number from the method declaration
-        Integer lineNumber = method.getBegin().map(range -> range.line).orElse(null);
-        ClassMethodRelationship methodRel = new ClassMethodRelationship(savedJavaMethod, lineNumber);
-        javaClass.getMethods().add(methodRel);
+        javaClass.addMethod(savedJavaMethod, getLineNumber(method));
 
         method.findAll(MethodCallExpr.class).forEach(call -> createCalls(savedJavaMethod, call));
 
@@ -138,10 +129,7 @@ public class JavaParsingService implements ParsingService {
             JavaField field = new JavaField(fieldName);
             var savedField = fieldRepository.save(field);
 
-            // Extract line number from the field access
-            Integer lineNumber = access.getBegin().map(range -> range.line).orElse(null);
-            MethodFieldReadRelationship readRel = new MethodFieldReadRelationship(savedField, lineNumber);
-            javaMethod.getReadFields().add(readRel);
+            javaMethod.addReadField(savedField, getLineNumber(access));
         }
     }
 
@@ -152,10 +140,7 @@ public class JavaParsingService implements ParsingService {
             var savedField = fieldRepository.save(field);
             fieldRepository.save(savedField);
 
-            // Extract line number from the assignment expression
-            Integer lineNumber = assign.getBegin().map(range -> range.line).orElse(null);
-            MethodFieldWriteRelationship writeRel = new MethodFieldWriteRelationship(savedField, lineNumber);
-            javaMethod.getWrittenFields().add(writeRel);
+            javaMethod.addWrittenField(savedField, getLineNumber(assign));
         }
     }
 
@@ -164,10 +149,7 @@ public class JavaParsingService implements ParsingService {
         JavaMethod calledMethod = new JavaMethod(calledMethodName, calledMethodName, "");
         var savedCalledMethod = methodRepository.save(calledMethod);
 
-        // Extract line number from the method call expression
-        Integer lineNumber = call.getBegin().map(range -> range.line).orElse(null);
-        MethodCallRelationship callRel = new MethodCallRelationship(savedCalledMethod, lineNumber);
-        javaMethod.getCalledMethods().add(callRel);
+        javaMethod.addCalledMethod(savedCalledMethod, getLineNumber(call));
     }
 
     public String getNodeName(Expression expression) {
@@ -177,5 +159,9 @@ public class JavaParsingService implements ParsingService {
             return expression.asNameExpr().getNameAsString();
         }
         return "";
+    }
+
+    private Integer getLineNumber(Node node) {
+        return node.getBegin().map(range -> range.line).orElse(null);
     }
 }

@@ -38,6 +38,19 @@ public class JavaMethod extends Element {
         this.filePath = filePath;
     }
 
+    public void addCalledMethod(JavaMethod javaMethod, Integer lineNumber) {
+        this.calledMethods.add(new MethodCallRelationship(javaMethod, lineNumber));
+    }
+
+    public void addReadField(JavaField javaField, Integer lineNumber) {
+        this.readFields.add(new MethodFieldReadRelationship(javaField, lineNumber));
+    }
+
+    public void addWrittenField(JavaField javaField, Integer lineNumber) {
+        this.writtenFields.add(new MethodFieldWriteRelationship(javaField, lineNumber));
+    }
+
+
     @Override
     public String toString() {
         return "JavaMethod{" +
