@@ -1,21 +1,15 @@
 package com.felipestanzani.beyondsight.repository;
 
 import com.felipestanzani.beyondsight.dto.FieldImpactQueryResult;
-import com.felipestanzani.beyondsight.dto.Method;
-import com.felipestanzani.beyondsight.model.JavaField;
+import com.felipestanzani.beyondsight.model.java.JavaField;
+import lombok.NonNull;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface JavaFieldRepository extends Neo4jRepository<JavaField, String> {
-
-       @Query("MATCH (m:Method)-[r:WRITES]->(f:Field {name: $fieldName}) RETURN DISTINCT m.name as name, m.signature as signature, m.filePath as filePath")
-       List<Method> findMethodsWritingToField(@Param("fieldName") String fieldName);
-
-       @Query("MATCH (m:Method)-[r:READS]->(f:Field {name: $fieldName}) RETURN DISTINCT m.name as name, m.signature as signature, m.filePath as filePath")
-       List<Method> findMethodsReadingFromField(@Param("fieldName") String fieldName);
+public interface JavaFieldRepository extends Neo4jRepository<@NonNull JavaField, @NonNull String> {
 
        @Query("""
                      // Direct impact: methods that directly read/write the field

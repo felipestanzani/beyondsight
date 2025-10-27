@@ -1,6 +1,8 @@
-package com.felipestanzani.beyondsight.exception;
+package com.felipestanzani.beyondsight.exception.handlers;
 
 import com.felipestanzani.beyondsight.dto.ErrorResponse;
+import com.felipestanzani.beyondsight.exception.*;
+import lombok.NonNull;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class GlobalExceptionHandler {
      * Handles ResourceNotFoundException and returns 404 NOT_FOUND.
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
+    public ResponseEntity<@NonNull ErrorResponse> handleResourceNotFoundException(
             ResourceNotFoundException ex, WebRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -42,7 +44,7 @@ public class GlobalExceptionHandler {
      * Handles ParseAlreadyRunningException and returns 409 CONFLICT.
      */
     @ExceptionHandler(ParseAlreadyRunningException.class)
-    public ResponseEntity<ErrorResponse> handleParseAlreadyRunningException(
+    public ResponseEntity<@NonNull ErrorResponse> handleParseAlreadyRunningException(
             ParseAlreadyRunningException ex, WebRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -59,7 +61,7 @@ public class GlobalExceptionHandler {
      * Handles ProjectParsingException and returns 500 INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(ProjectParsingException.class)
-    public ResponseEntity<ErrorResponse> handleProjectParsingException(
+    public ResponseEntity<@NonNull ErrorResponse> handleProjectParsingException(
             ProjectParsingException ex, WebRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -76,7 +78,7 @@ public class GlobalExceptionHandler {
      * Handles FileParsingException and returns 500 INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(FileParsingException.class)
-    public ResponseEntity<ErrorResponse> handleFileParsingException(
+    public ResponseEntity<@NonNull ErrorResponse> handleFileParsingException(
             FileParsingException ex, WebRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -93,7 +95,7 @@ public class GlobalExceptionHandler {
      * Handles DatabaseOperationException and returns 500 INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(DatabaseOperationException.class)
-    public ResponseEntity<ErrorResponse> handleDatabaseOperationException(
+    public ResponseEntity<@NonNull ErrorResponse> handleDatabaseOperationException(
             DatabaseOperationException ex, WebRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -110,7 +112,7 @@ public class GlobalExceptionHandler {
      * Handles AsyncParsingException and returns 500 INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(AsyncParsingException.class)
-    public ResponseEntity<ErrorResponse> handleAsyncParsingException(
+    public ResponseEntity<@NonNull ErrorResponse> handleAsyncParsingException(
             AsyncParsingException ex, WebRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(
@@ -127,7 +129,7 @@ public class GlobalExceptionHandler {
      * Handles McpResourceNotFoundException and returns JSON-RPC 2.0 error response.
      */
     @ExceptionHandler(McpResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleMcpResourceNotFoundException(
+    public ResponseEntity<@NonNull Map<String, Object>> handleMcpResourceNotFoundException(
             McpResourceNotFoundException ex, WebRequest request) {
 
         Map<String, Object> errorResponse = createJsonRpcErrorResponse(
@@ -142,7 +144,7 @@ public class GlobalExceptionHandler {
      * Handles McpInvalidParameterException and returns JSON-RPC 2.0 error response.
      */
     @ExceptionHandler(McpInvalidParameterException.class)
-    public ResponseEntity<Map<String, Object>> handleMcpInvalidParameterException(
+    public ResponseEntity<@NonNull Map<String, Object>> handleMcpInvalidParameterException(
             McpInvalidParameterException ex, WebRequest request) {
 
         Map<String, Object> errorResponse = createJsonRpcErrorResponse(
@@ -157,7 +159,7 @@ public class GlobalExceptionHandler {
      * Handles McpInternalErrorException and returns JSON-RPC 2.0 error response.
      */
     @ExceptionHandler(McpInternalErrorException.class)
-    public ResponseEntity<Map<String, Object>> handleMcpInternalErrorException(
+    public ResponseEntity<@NonNull Map<String, Object>> handleMcpInternalErrorException(
             McpInternalErrorException ex, WebRequest request) {
 
         Map<String, Object> errorResponse = createJsonRpcErrorResponse(
@@ -172,7 +174,7 @@ public class GlobalExceptionHandler {
      * Handles generic exceptions and returns 500 INTERNAL_SERVER_ERROR.
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
+    public ResponseEntity<@NonNull ErrorResponse> handleGenericException(
             Exception ex, WebRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(

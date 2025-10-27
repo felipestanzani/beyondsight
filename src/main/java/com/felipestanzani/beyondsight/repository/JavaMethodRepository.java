@@ -1,14 +1,15 @@
 package com.felipestanzani.beyondsight.repository;
 
 import com.felipestanzani.beyondsight.dto.MethodImpactQueryResult;
-import com.felipestanzani.beyondsight.model.JavaMethod;
+import com.felipestanzani.beyondsight.model.java.JavaMethod;
+import lombok.NonNull;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface JavaMethodRepository extends Neo4jRepository<JavaMethod, String> {
+public interface JavaMethodRepository extends Neo4jRepository<@NonNull JavaMethod, @NonNull String> {
 
     @Query("""
             MATCH (target:Method {signature: $methodSignature})

@@ -1,8 +1,8 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.model.JavaClass;
-import com.felipestanzani.beyondsight.model.JavaField;
-import com.felipestanzani.beyondsight.model.JavaMethod;
+import com.felipestanzani.beyondsight.model.java.JavaClass;
+import com.felipestanzani.beyondsight.model.java.JavaField;
+import com.felipestanzani.beyondsight.model.java.JavaMethod;
 import com.felipestanzani.beyondsight.model.ClassFieldRelationship;
 import com.felipestanzani.beyondsight.model.ClassMethodRelationship;
 import com.felipestanzani.beyondsight.model.MethodCallRelationship;
@@ -41,8 +41,8 @@ public class JavaParsingService implements ParsingService {
     private final JavaMethodRepository methodRepository;
 
     public JavaParsingService(JavaClassRepository classRepository,
-            JavaFieldRepository fieldRepository,
-            JavaMethodRepository methodRepository) {
+                              JavaFieldRepository fieldRepository,
+                              JavaMethodRepository methodRepository) {
         this.classRepository = classRepository;
         this.fieldRepository = fieldRepository;
         this.methodRepository = methodRepository;
