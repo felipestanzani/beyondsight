@@ -1,14 +1,20 @@
 # BeyondSight
 
-A Java code dependency analyzer and impact analysis tool that uses graph database technology to provide comprehensive code relationship insights.
+A code dependency analyzer and impact analysis tool that uses graph database technology to provide comprehensive code relationship insights.
 
 ## Overview
 
-BeyondSight analyzes Java projects to extract code structure and relationships, storing them in a Neo4j graph database. It provides REST APIs for performing impact analysis queries, helping developers understand the ripple effects of code changes across their codebase.
+When a developer uses an LLM to change code, this LLM "greps" the source code in search of references to that element that is being changed. The big issue is that grep returns many things that are not related to the code being changed. This way, the LLM ends up spending too many tokens and context to find the code references and sometimes considers the wrong ones.
+
+BeyondSight solves this.
+
+Instead of grepping, the LLM calls one of the BeyondSight MCP tools and receives the whole direct and indirect references to the code you want it to change. In small projects, it is good; in big projects, it is simply killer.
+
+The tool analyzes the project to extract code structure and relationships, storing them in a Neo4j graph database. It provides REST APIs for performing impact analysis queries, helping developers understand the ripple effects of code changes across their codebase.
 
 ## Features
 
-- **Java Project Parsing**: Automatically parses Java source code and extracts classes, methods, and fields
+- **Code Project Parsing**: Automatically parses source code and extracts classes, methods, and fields
 - **Graph Database Storage**: Stores code relationships in Neo4j for efficient querying
 - **REST API**: Comprehensive API for impact analysis queries
 - **MCP Integration**: Model Context Protocol (MCP) server for LLM integration
@@ -16,6 +22,20 @@ BeyondSight analyzes Java projects to extract code structure and relationships, 
 - **Hierarchical Impact Analysis**: Get complete impact reports with class and method hierarchies
 - **Line Number Tracking**: Precise location tracking for all code relationships
 - **LLM-Ready Tools**: Pre-configured tools for AI assistants to perform code impact analysis
+
+## Supported languages
+
+- **Java** 21
+
+### Upcoming
+
+- **JavaScript**
+- **TypeScript**
+- **Python**
+- **JSX**
+- **TSX**
+
+And any language the community decide to use.
 
 ## Tech Stack
 
@@ -28,7 +48,7 @@ BeyondSight analyzes Java projects to extract code structure and relationships, 
 
 ## Prerequisites
 
-- Java 25
+- Java 21
 - Docker & Docker Compose
 - Gradle (or use the included Gradle wrapper)
 
@@ -41,10 +61,10 @@ git clone git@github.com:felipestanzani/beyondsight.git
 cd beyondsight
 ```
 
-### 2. Start Neo4j Database
+### 2. Build and Run the Application
 
 ```bash
-docker-compose up -d
+./gradlew bootRun
 ```
 
 This will start Neo4j on:
@@ -54,13 +74,7 @@ This will start Neo4j on:
 - Username: `neo4j`
 - Password: `notverysecret`
 
-### 3. Build and Run the Application
-
-```bash
-./gradlew bootRun
-```
-
-The application will start on `http://localhost:8080`
+And the application will start on `http://localhost:8080`
 
 ### 4. Configure MCP Server in Cursor (Optional)
 
@@ -167,23 +181,24 @@ After configuration, you can ask Cursor questions like:
 - "Show me the impact analysis for the `calculateTotal()` method"
 - "Which methods would be affected if I modify the `userName` field?"
 
-These tools will automatically be available in Cursor's AI assistant and can analyze your Java codebase for impact analysis.
+These tools will automatically be available in Cursor's AI assistant and can analyze your codebase for impact analysis.
 
 ## API Endpoints
 
 ### Project Indexing
 
-#### Index a Java Project
+#### Index a Project
 
 ```http
-POST /api/v1/index/rescan?path=/absolute/path/to/java/project
+POST /api/v1/index/rescan
+# use path=/absolute/path/to/project
 ```
 
-**Description**: Triggers a full re-scan of a Java project. Clears the entire database first and then parses all `.java` files in the specified directory.
+**Description**: Triggers a full re-scan of a project. Clears the entire database first and then parses all the supported source code files in the specified directory.
 
 **Parameters**:
 
-- `path` (required): Absolute file path to the root of the Java project
+- `path` (required): Absolute file path to the root of the project
 
 #### Get Parse Status
 
@@ -236,10 +251,10 @@ GET /api/v1/impact/class/full?className=ClassName
 
 ## Usage Examples
 
-### 1. Index a Java Project
+### 1. Index a Project
 
 ```bash
-curl -X POST "http://localhost:8080/api/v1/index/rescan?path=/Users/username/my-java-project"
+curl -X POST "http://localhost:8080/api/v1/index/rescan?path=/Users/username/my-project"
 ```
 
 ### 2. Check Parse Status
@@ -290,7 +305,7 @@ BeyondSight uses Neo4j to model Java code relationships:
 
 ### Data Flow
 
-1. **Parsing**: JavaParser analyzes `.java` files and extracts AST nodes
+1. **Parsing**: Parser analyzes source files and extracts AST nodes
 2. **Storage**: Code elements and relationships are stored in Neo4j
 3. **Querying**: Cypher queries traverse the graph to find impact relationships
 4. **Response**: Results are formatted into hierarchical JSON responses
