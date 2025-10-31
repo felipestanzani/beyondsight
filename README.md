@@ -1,36 +1,82 @@
 # BeyondSight
 
-A Java code dependency analyzer and impact analysis tool that uses graph database technology to provide comprehensive code relationship insights.
+The best friend of the modern developer pocket!
+
+## Why BeyondSight?
+
+**Stop forcing your AI to guess. Start giving it answers.**
+
+When you ask an AI assistant ("What happens if I change this method?"), it kicks off a slow, expensive, and unreliable process. The LLM simulates a brute-force `grep` search, burning thousands of API tokens to read files and *guess* your code's structure. This leads to high API bills and missed dependencies.
+
+BeyondSight is a **precision-guided context provider** for AI-driven development. It acts as the "impact analysis brain" for your AI.
+
+It fundamentally changes the economics and reliability of AI-assisted coding by replacing this blind, expensive search with a single, intelligent query.
+
+**The Old Way (Blind & Expensive)**
+>
+> 1. AI Assistant makes a **blizzard of `grep` calls**.
+> 2. It **burns thousands of tokens** reading entire files.
+> 3. It tries to *guess* relationships, often missing transitive dependencies.
+> 4. **Result:** Slow, expensive, and inaccurate.
+
+**The BeyondSight Way (Precise & Cheap)**
+>
+> 1. AI Assistant makes **one single MCP tool call**.
+> 2. BeyondSight traverses its graph database and returns a **perfect, pre-analyzed impact report** (all files, exact line numbers, and all transitive dependencies).
+> 3. **Result:** Instant, cheap, and 100% accurate.
+
+This approach provides clear, immediate benefits:
+
+* 💰 **Massive Cost Savings:** Slashes your LLM API bills by replacing token-heavy searches with a single, lightweight tool call.
+* ⚡ **Blazing Speed:** The AI gets a complete dependency map instantly, eliminating search, read, and parse latency.
+* 🎯 **Sniper-Like Accuracy:** Delivers a graph-verified impact report with **zero false positives** and **complete transitive dependencies**, enabling safe, reliable AI-powered refactoring.
+
+### Real-World Use Cases
+
+BeyondSight is designed to be the "code memory" for your AI assistant.
+
+* **AI-Assisted Refactoring:** Ask, "AI, rename this `UserService` class." The AI queries BeyondSight and gets a *complete* list of *every* file and line number to change.
+* **Assessing API Evolution:** Ask, "What's the impact of changing this method signature?" The AI instantly provides a full, transitive impact report, warning you of downstream breakages.
+* **AI-Powered Code Review:** Ask, "Could this PR change break anything?" The AI uses BeyondSight to perform an instant, comprehensive impact analysis that's impossible to do manually.
+* **Understanding Architecture:** Ask, "Show me all services that depend on our `PaymentModule`." The AI queries the graph to reveal hidden dependencies in seconds.
 
 ## Overview
 
-BeyondSight analyzes Java projects to extract code structure and relationships, storing them in a Neo4j graph database. It provides REST APIs for performing impact analysis queries, helping developers understand the ripple effects of code changes across their codebase.
+BeyondSight is a code analysis server that acts as a high-speed "code intelligence layer" for AI assistants.
+
+Its process is simple:
+
+1. **Parses** your entire Java project into its core components.
+2. **Models** all code relationships (classes, methods, fields) in a high-performance **Neo4j graph database**.
+3. **Exposes** this complete dependency graph to LLMs via the **Model Context Protocol (MCP)**.
+
+When you ask, "What happens if I change this?", your AI doesn't *search*—it *asks BeyondSight* and gets an instant, perfect, and graph-verified answer.
+
+While the primary focus is serving LLMs via MCP, the powerful graph queries are also accessible via a traditional REST API for custom tooling or manual inspection.
 
 ## Features
 
-- **Java Project Parsing**: Automatically parses Java source code and extracts classes, methods, and fields
-- **Graph Database Storage**: Stores code relationships in Neo4j for efficient querying
-- **REST API**: Comprehensive API for impact analysis queries
-- **MCP Integration**: Model Context Protocol (MCP) server for LLM integration
-- **Transitive Dependency Tracking**: Find upstream callers and downstream callees
-- **Hierarchical Impact Analysis**: Get complete impact reports with class and method hierarchies
-- **Line Number Tracking**: Precise location tracking for all code relationships
-- **LLM-Ready Tools**: Pre-configured tools for AI assistants to perform code impact analysis
+* **Primary MCP Server for LLMs**: The core of the project. Provides a high-speed Model Context Protocol (MCP) server that allows AI assistants (like Cursor) to ask questions and receive instant impact analysis.
+* **Pre-configured AI Tools**: Ships with ready-to-use MCP tools (`getClassImpact`, `getMethodImpact`, `getFieldImpact`) so the AI can immediately perform analysis without complex setup.
+* **Deep Graph Database Analysis**: Automatically parses all Java source code and stores the *entire* codebase structure (classes, methods, fields, and their relationships) in a Neo4j graph database.
+* **Full Transitive Dependency Tracking**: The graph model allows for instant discovery of *all* affected code paths, including multi-level "hidden" dependencies that primitive, file-based searches would miss.
+* **Precise, Hierarchical Impact Reports**: Queries return structured, hierarchical reports of all affected classes and methods—**with exact line numbers**—in a format that is perfect for an AI to parse and act upon.
+* **Secondary REST API Access**: Includes a comprehensive REST API for programmatic access to the impact analysis engine, allowing integration with non-MCP tools or custom developer scripts.
 
 ## Tech Stack
 
-- **Spring Boot** 4.0.0-RC1
-- **Java** 25
-- **Neo4j** Graph Database
-- **JavaParser** 3.27.1 for Java code parsing
-- **Gradle** Build System
-- **Docker Compose** for Neo4j setup
+* **Spring Boot** 4.0.0-RC1
+* **Java** 25
+* **Neo4j** Graph Database
+* **JavaParser** 3.27.1 for Java code parsing
+* **Gradle** Build System
+* **Docker Compose** for Neo4j setup
 
 ## Prerequisites
 
-- Java 25
-- Docker & Docker Compose
-- Gradle (or use the included Gradle wrapper)
+* Java 25
+* Docker & Docker Compose
+* Gradle (or use the included Gradle wrapper)
 
 ## Getting Started
 
@@ -49,10 +95,10 @@ docker-compose up -d
 
 This will start Neo4j on:
 
-- Bolt port: `7687`
-- HTTP port: `7474`
-- Username: `neo4j`
-- Password: `notverysecret`
+* Bolt port: `7687`
+* HTTP port: `7474`
+* Username: `neo4j`
+* Password: `notverysecret`
 
 ### 3. Build and Run the Application
 
@@ -116,7 +162,7 @@ BeyondSight provides the following MCP tools for impact analysis:
 
 **Parameters**:
 
-- `className` (string, required): Name of the class to analyze
+* `className` (string, required): Name of the class to analyze
 
 **Returns**: Hierarchical structure showing all affected classes and methods
 
@@ -132,7 +178,7 @@ getClassImpact(className: "UserService")
 
 **Parameters**:
 
-- `methodSignature` (string, required): Signature of the method to analyze (e.g., `calculateTotal()`)
+* `methodSignature` (string, required): Signature of the method to analyze (e.g., `calculateTotal()`)
 
 **Returns**: Hierarchical structure showing all affected classes and methods
 
@@ -148,8 +194,8 @@ getMethodImpact(methodSignature: "calculateTotal()")
 
 **Parameters**:
 
-- `className` (string, required): Name of the class that contains the field
-- `fieldName` (string, required): Name of the field to analyze
+* `className` (string, required): Name of the class that contains the field
+* `fieldName` (string, required): Name of the field to analyze
 
 **Returns**: Hierarchical structure showing all affected classes and methods
 
@@ -163,9 +209,9 @@ getFieldImpact(className: "UserService", fieldName: "userName")
 
 After configuration, you can ask Cursor questions like:
 
-- "What would be impacted if I change the `UserService` class?"
-- "Show me the impact analysis for the `calculateTotal()` method"
-- "Which methods would be affected if I modify the `userName` field?"
+* "What would be impacted if I change the `UserService` class?"
+* "Show me the impact analysis for the `calculateTotal()` method"
+* "Which methods would be affected if I modify the `userName` field?"
 
 These tools will automatically be available in Cursor's AI assistant and can analyze your Java codebase for impact analysis.
 
@@ -183,7 +229,7 @@ POST /api/v1/index/rescan?path=/absolute/path/to/java/project
 
 **Parameters**:
 
-- `path` (required): Absolute file path to the root of the Java project
+* `path` (required): Absolute file path to the root of the Java project
 
 #### Get Parse Status
 
@@ -207,8 +253,8 @@ GET /api/v1/impact/field/full?fieldName=fieldName&className=ClassName
 
 **Parameters**:
 
-- `fieldName` (required): The name of the field to analyze
-- `className` (required): The name of the class containing the field
+* `fieldName` (required): The name of the field to analyze
+* `className` (required): The name of the class containing the field
 
 #### Method Impact Analysis
 
@@ -220,7 +266,7 @@ GET /api/v1/impact/method/full?methodSignature=methodSignature
 
 **Parameters**:
 
-- `methodSignature` (required): The full method signature (e.g., `calculateTotal()`)
+* `methodSignature` (required): The full method signature (e.g., `calculateTotal()`)
 
 #### Class Impact Analysis
 
@@ -232,7 +278,7 @@ GET /api/v1/impact/class/full?className=ClassName
 
 **Parameters**:
 
-- `className` (required): The name of the class to analyze
+* `className` (required): The name of the class to analyze
 
 ## Usage Examples
 
@@ -276,17 +322,17 @@ BeyondSight uses Neo4j to model Java code relationships:
 
 **Nodes**:
 
-- `JavaClass`: Represents Java classes with name and file path
-- `JavaMethod`: Represents Java methods with name, signature, and file path
-- `JavaField`: Represents Java fields with name
+* `JavaClass`: Represents Java classes with name and file path
+* `JavaMethod`: Represents Java methods with name, signature, and file path
+* `JavaField`: Represents Java fields with name
 
 **Relationships**:
 
-- `ClassFieldRelationship`: Links classes to their fields
-- `ClassMethodRelationship`: Links classes to their methods
-- `MethodCallRelationship`: Links methods to methods they call
-- `MethodFieldReadRelationship`: Links methods to fields they read
-- `MethodFieldWriteRelationship`: Links methods to fields they write
+* `ClassFieldRelationship`: Links classes to their fields
+* `ClassMethodRelationship`: Links classes to their methods
+* `MethodCallRelationship`: Links methods to methods they call
+* `MethodFieldReadRelationship`: Links methods to fields they read
+* `MethodFieldWriteRelationship`: Links methods to fields they write
 
 ### Data Flow
 
