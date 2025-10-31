@@ -1,25 +1,20 @@
 package com.felipestanzani.beyondsight.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Node("Field")
 public class JavaField {
     @Id
     private String name;
 
-    public JavaField() {
-    }
-
     public JavaField(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
     }
 
