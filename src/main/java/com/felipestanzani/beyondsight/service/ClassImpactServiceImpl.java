@@ -7,6 +7,7 @@ import com.felipestanzani.beyondsight.dto.ImpactedMethodResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.repository.JavaClassRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,14 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ClassImpactServiceImpl implements ClassImpactService {
 
     private final JavaClassRepository classRepository;
-
-    public ClassImpactServiceImpl(JavaClassRepository classRepository) {
-        this.classRepository = classRepository;
-    }
 
     @Override
     public ClassImpactResponse getFullClassImpact(String className) {

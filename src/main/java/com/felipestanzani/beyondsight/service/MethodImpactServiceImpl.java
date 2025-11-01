@@ -7,19 +7,17 @@ import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.mappers.JavaClassMapper;
 import com.felipestanzani.beyondsight.repository.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Service
 public class MethodImpactServiceImpl implements MethodImpactService {
 
     private final JavaMethodRepository methodRepository;
-
-    public MethodImpactServiceImpl(JavaMethodRepository methodRepository) {
-        this.methodRepository = methodRepository;
-    }
 
     /**
      * Gets full transitive impact analysis for a method.

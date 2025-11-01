@@ -10,6 +10,7 @@ import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,20 +19,13 @@ import org.springframework.stereotype.Service;
  * Validates parameters and delegates to existing services for actual impact
  * analysis.
  */
+@RequiredArgsConstructor
 @Service
 public class McpImpactService {
 
     private final FieldImpactService fieldImpactService;
     private final MethodImpactService methodImpactService;
     private final ClassImpactService classImpactService;
-
-    public McpImpactService(FieldImpactService fieldImpactService,
-            MethodImpactService methodImpactService,
-            ClassImpactService classImpactService) {
-        this.fieldImpactService = fieldImpactService;
-        this.methodImpactService = methodImpactService;
-        this.classImpactService = classImpactService;
-    }
 
     /**
      * Gets full transitive impact analysis for a field.

@@ -7,19 +7,17 @@ import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.mappers.JavaClassMapper;
 import com.felipestanzani.beyondsight.repository.JavaFieldRepository;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Service
 public class FieldImpactServiceImpl implements FieldImpactService {
 
     private final JavaFieldRepository fieldRepository;
-
-    public FieldImpactServiceImpl(JavaFieldRepository fieldRepository) {
-        this.fieldRepository = fieldRepository;
-    }
 
     /**
      * Gets full transitive impact analysis for a field.
