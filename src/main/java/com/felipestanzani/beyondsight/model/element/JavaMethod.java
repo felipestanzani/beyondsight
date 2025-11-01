@@ -1,5 +1,8 @@
-package com.felipestanzani.beyondsight.model;
+package com.felipestanzani.beyondsight.model.element;
 
+import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodFieldReadRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodFieldWriteRelationship;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

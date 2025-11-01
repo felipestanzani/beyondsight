@@ -1,4 +1,4 @@
-package com.felipestanzani.beyondsight.model;
+package com.felipestanzani.beyondsight.model.element;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

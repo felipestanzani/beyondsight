@@ -1,13 +1,13 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.model.JavaClass;
-import com.felipestanzani.beyondsight.model.JavaField;
-import com.felipestanzani.beyondsight.model.JavaMethod;
-import com.felipestanzani.beyondsight.model.ClassFieldRelationship;
-import com.felipestanzani.beyondsight.model.ClassMethodRelationship;
-import com.felipestanzani.beyondsight.model.MethodCallRelationship;
-import com.felipestanzani.beyondsight.model.MethodFieldReadRelationship;
-import com.felipestanzani.beyondsight.model.MethodFieldWriteRelationship;
+import com.felipestanzani.beyondsight.model.element.JavaClass;
+import com.felipestanzani.beyondsight.model.element.JavaField;
+import com.felipestanzani.beyondsight.model.element.JavaMethod;
+import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
+import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodFieldReadRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodFieldWriteRelationship;
 import com.felipestanzani.beyondsight.repository.JavaClassRepository;
 import com.felipestanzani.beyondsight.repository.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.JavaMethodRepository;

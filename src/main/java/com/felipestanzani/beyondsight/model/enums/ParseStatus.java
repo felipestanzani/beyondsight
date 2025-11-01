@@ -1,4 +1,4 @@
-package com.felipestanzani.beyondsight.model;
+package com.felipestanzani.beyondsight.model.enums;
 
 /**
  * Enum representing the current status of a parsing operation.

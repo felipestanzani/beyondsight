@@ -1,5 +1,6 @@
-package com.felipestanzani.beyondsight.model;
+package com.felipestanzani.beyondsight.model.relationship;
 
+import com.felipestanzani.beyondsight.model.element.JavaField;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -13,13 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @RelationshipProperties
-public class ClassMethodRelationship {
+public class ClassFieldRelationship {
     @Id
     @GeneratedValue
     private String id;
 
     @TargetNode
-    private JavaMethod method;
+    private JavaField field;
 
     @Property("createdAt")
     private LocalDateTime createdAt;
@@ -30,8 +31,8 @@ public class ClassMethodRelationship {
     @Property("confidence")
     private Double confidence;
 
-    public ClassMethodRelationship(JavaMethod method, Integer lineNumber) {
-        this.method = method;
+    public ClassFieldRelationship(JavaField field, Integer lineNumber) {
+        this.field = field;
         this.lineNumber = lineNumber;
         this.createdAt = LocalDateTime.now();
         this.confidence = 1.0;
@@ -39,9 +40,9 @@ public class ClassMethodRelationship {
 
     @Override
     public String toString() {
-        return "ClassMethodRelationship{" +
+        return "ClassFieldRelationship{" +
                 "id=" + id +
-                ", method=" + method +
+                ", field=" + field +
                 ", createdAt=" + createdAt +
                 ", lineNumber=" + lineNumber +
                 ", confidence=" + confidence +

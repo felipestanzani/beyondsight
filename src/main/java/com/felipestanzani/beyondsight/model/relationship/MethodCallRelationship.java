@@ -1,5 +1,6 @@
-package com.felipestanzani.beyondsight.model;
+package com.felipestanzani.beyondsight.model.relationship;
 
+import com.felipestanzani.beyondsight.model.element.JavaMethod;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;

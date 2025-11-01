@@ -1,7 +1,8 @@
 package com.felipestanzani.beyondsight.controller;
 
-import com.felipestanzani.beyondsight.model.ParseStatus;
+import com.felipestanzani.beyondsight.model.enums.ParseStatus;
 import com.felipestanzani.beyondsight.service.interfaces.ProjectIndexingService;
+import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class TraceabilityController {
      * @param path The absolute file path to the root of the Java project.
      */
     @PostMapping("/index/rescan")
-    public ResponseEntity<String> indexProject(@RequestParam String path) {
+    public ResponseEntity<@NonNull String> indexProject(@RequestParam String path) {
         projectIndexingService.rescanProject(path);
         return ResponseEntity.ok("Project re-scan initiated.");
     }
@@ -32,7 +33,7 @@ public class TraceabilityController {
      * @return The current ParseStatus
      */
     @GetMapping("/index/status")
-    public ResponseEntity<ParseStatus> getParseStatus() {
+    public ResponseEntity<@NonNull ParseStatus> getParseStatus() {
         ParseStatus status = projectIndexingService.getParseStatus();
         return ResponseEntity.ok(status);
     }

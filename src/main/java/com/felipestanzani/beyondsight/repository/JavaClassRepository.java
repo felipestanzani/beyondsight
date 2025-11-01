@@ -1,14 +1,15 @@
 package com.felipestanzani.beyondsight.repository;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactQueryResult;
-import com.felipestanzani.beyondsight.model.JavaClass;
+import com.felipestanzani.beyondsight.model.element.JavaClass;
+import lombok.NonNull;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface JavaClassRepository extends Neo4jRepository<JavaClass, String> {
+public interface JavaClassRepository extends Neo4jRepository<@NonNull JavaClass, @NonNull String> {
 
         @Query("""
                         MATCH (target:Class {name: $className})

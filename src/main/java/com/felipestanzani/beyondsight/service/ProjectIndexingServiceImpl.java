@@ -2,7 +2,7 @@ package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.exception.ParseAlreadyRunningException;
 import com.felipestanzani.beyondsight.exception.AsyncParsingException;
-import com.felipestanzani.beyondsight.model.ParseStatus;
+import com.felipestanzani.beyondsight.model.enums.ParseStatus;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
 import com.felipestanzani.beyondsight.service.interfaces.ProjectIndexingService;
 import lombok.RequiredArgsConstructor;

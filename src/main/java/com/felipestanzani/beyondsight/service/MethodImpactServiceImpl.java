@@ -4,7 +4,7 @@ import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
-import com.felipestanzani.beyondsight.mappers.JavaMethodMapper;
+import com.felipestanzani.beyondsight.mapper.JavaMethodMapper;
 import com.felipestanzani.beyondsight.repository.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import lombok.RequiredArgsConstructor;
