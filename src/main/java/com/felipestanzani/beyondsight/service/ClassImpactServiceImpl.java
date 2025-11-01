@@ -2,11 +2,12 @@ package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.ClassImpactQueryResult;
-import com.felipestanzani.beyondsight.dto.ImpactedFieldResponse;
+import com.felipestanzani.beyondsight.dto.FieldResponse;
 import com.felipestanzani.beyondsight.dto.ImpactedMethodResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.repository.JavaClassRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,14 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ClassImpactServiceImpl implements ClassImpactService {
 
     private final JavaClassRepository classRepository;
-
-    public ClassImpactServiceImpl(JavaClassRepository classRepository) {
-        this.classRepository = classRepository;
-    }
 
     @Override
     public ClassImpactResponse getFullClassImpact(String className) {
@@ -76,8 +74,8 @@ public class ClassImpactServiceImpl implements ClassImpactService {
             ClassImpactResponse existing = classMap.get(classNameKey);
             if (existing != null) {
                 // Add field to existing class
-                List<ImpactedFieldResponse> newFields = new ArrayList<>(existing.impactedFields());
-                newFields.add(new ImpactedFieldResponse(fieldName, fieldType, impactType));
+                List<FieldResponse> newFields = new ArrayList<>(existing.impactedFields());
+                newFields.add(new FieldResponse(fieldName, fieldType, impactType));
                 classMap.put(classNameKey, new ClassImpactResponse(
                         existing.name(),
                         existing.filePath(),
@@ -91,7 +89,7 @@ public class ClassImpactServiceImpl implements ClassImpactService {
                         filePath,
                         null,
                         List.of(),
-                        List.of(new ImpactedFieldResponse(fieldName, fieldType, impactType))));
+                        List.of(new FieldResponse(fieldName, fieldType, impactType))));
             }
         });
 

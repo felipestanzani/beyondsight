@@ -23,6 +23,7 @@ import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
+@RequiredArgsConstructor
 @Service
 public class JavaParsingService implements ParsingService {
 
@@ -39,14 +41,6 @@ public class JavaParsingService implements ParsingService {
     private final JavaClassRepository classRepository;
     private final JavaFieldRepository fieldRepository;
     private final JavaMethodRepository methodRepository;
-
-    public JavaParsingService(JavaClassRepository classRepository,
-            JavaFieldRepository fieldRepository,
-            JavaMethodRepository methodRepository) {
-        this.classRepository = classRepository;
-        this.fieldRepository = fieldRepository;
-        this.methodRepository = methodRepository;
-    }
 
     public void parseProject(String projectPath) {
         try (Stream<Path> stream = Files.walk(Path.of(projectPath))) {

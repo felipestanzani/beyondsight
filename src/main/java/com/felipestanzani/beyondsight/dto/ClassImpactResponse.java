@@ -10,5 +10,5 @@ public record ClassImpactResponse(
                 String filePath,
                 List<ClassImpactResponse> impactedClasses,
                 List<ImpactedMethodResponse> impactedMethods,
-                List<ImpactedFieldResponse> impactedFields) {
+                List<FieldResponse> impactedFields) {
 }

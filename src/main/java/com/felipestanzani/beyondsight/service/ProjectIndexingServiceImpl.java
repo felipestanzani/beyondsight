@@ -5,18 +5,16 @@ import com.felipestanzani.beyondsight.exception.AsyncParsingException;
 import com.felipestanzani.beyondsight.model.ParseStatus;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
 import com.felipestanzani.beyondsight.service.interfaces.ProjectIndexingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class ProjectIndexingServiceImpl implements ProjectIndexingService {
 
     private final ParsingService parsingService;
     private volatile ParseStatus parseStatus = ParseStatus.IDLE;
     private final Object lock = new Object();
-
-    public ProjectIndexingServiceImpl(ParsingService parsingService) {
-        this.parsingService = parsingService;
-    }
 
     /**
      * Triggers a full re-scan of a project. Clears the entire database first.
