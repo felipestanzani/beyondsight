@@ -1,10 +1,10 @@
 package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.MethodImpactQueryResult;
+import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
-import com.felipestanzani.beyondsight.mappers.JavaClassMapper;
+import com.felipestanzani.beyondsight.mappers.JavaMethodMapper;
 import com.felipestanzani.beyondsight.repository.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +27,14 @@ public class MethodImpactServiceImpl implements MethodImpactService {
      */
     @Override
     public MethodImpactResponse getFullMethodImpact(String methodSignature) {
-        List<MethodImpactQueryResult> results = methodRepository.findFullMethodImpact(methodSignature);
+        List<ElementImpactQueryResult> results = methodRepository.findFullMethodImpact(methodSignature);
 
         if (results.isEmpty()) {
             throw new ResourceNotFoundException("method", methodSignature);
         }
 
         // Group by class and build hierarchical structure using mapper
-        Map<String, ClassImpactResponse> classMap = JavaClassMapper.mapMethodResultsToClassImpactResponses(results);
+        Map<String, ClassImpactResponse> classMap = JavaMethodMapper.mapMethodResultsToClassImpactResponses(results);
 
         return new MethodImpactResponse(methodSignature, List.copyOf(classMap.values()));
     }

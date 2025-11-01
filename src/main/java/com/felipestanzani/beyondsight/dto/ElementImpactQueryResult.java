@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.dto;
 
-public record MethodImpactQueryResult(
+public record ElementImpactQueryResult(
                 String className,
                 String filePath,
                 String methodName,
