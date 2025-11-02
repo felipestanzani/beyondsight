@@ -5,7 +5,7 @@ import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.mapper.MethodMapper;
-import com.felipestanzani.beyondsight.repository.JavaMethodRepository;
+import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

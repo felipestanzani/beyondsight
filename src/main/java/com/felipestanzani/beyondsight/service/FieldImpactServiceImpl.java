@@ -5,7 +5,7 @@ import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
 import com.felipestanzani.beyondsight.dto.FieldImpactResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.mapper.FieldMapper;
-import com.felipestanzani.beyondsight.repository.JavaFieldRepository;
+import com.felipestanzani.beyondsight.repository.java.JavaFieldRepository;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

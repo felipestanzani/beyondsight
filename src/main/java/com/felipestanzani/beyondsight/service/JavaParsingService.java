@@ -8,9 +8,9 @@ import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodFieldReadRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodFieldWriteRelationship;
-import com.felipestanzani.beyondsight.repository.JavaClassRepository;
-import com.felipestanzani.beyondsight.repository.JavaFieldRepository;
-import com.felipestanzani.beyondsight.repository.JavaMethodRepository;
+import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
+import com.felipestanzani.beyondsight.repository.java.JavaFieldRepository;
+import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
 import com.felipestanzani.beyondsight.exception.ProjectParsingException;
 import com.felipestanzani.beyondsight.exception.FileParsingException;

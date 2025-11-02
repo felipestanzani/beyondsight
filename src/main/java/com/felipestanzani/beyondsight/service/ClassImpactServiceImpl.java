@@ -5,7 +5,7 @@ import com.felipestanzani.beyondsight.dto.ClassImpactQueryResult;
 import com.felipestanzani.beyondsight.dto.FieldResponse;
 import com.felipestanzani.beyondsight.dto.ImpactedMethodResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
-import com.felipestanzani.beyondsight.repository.JavaClassRepository;
+import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
