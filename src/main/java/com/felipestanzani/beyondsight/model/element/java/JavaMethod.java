@@ -1,15 +1,14 @@
-package com.felipestanzani.beyondsight.model.element;
+package com.felipestanzani.beyondsight.model.element.java;
 
+import com.felipestanzani.beyondsight.model.element.interfaces.MethodInterface;
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodFieldReadRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodFieldWriteRelationship;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,14 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-@Node("Method")
-public class JavaMethod {
+@AllArgsConstructor
+@Node("JavaMethod")
+public class JavaMethod implements MethodInterface {
     @Id
     private String signature;
 
-    @Property("name")
     private String name;
 
-    @Property("filePath")
     private String filePath;
 
     @Relationship(type = "CALLS")

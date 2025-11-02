@@ -1,7 +1,7 @@
 package com.felipestanzani.beyondsight.repository;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactQueryResult;
-import com.felipestanzani.beyondsight.model.element.JavaClass;
+import com.felipestanzani.beyondsight.model.element.java.JavaClass;
 import lombok.NonNull;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;

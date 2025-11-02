@@ -1,8 +1,8 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.model.element.JavaClass;
-import com.felipestanzani.beyondsight.model.element.JavaField;
-import com.felipestanzani.beyondsight.model.element.JavaMethod;
+import com.felipestanzani.beyondsight.model.element.java.JavaClass;
+import com.felipestanzani.beyondsight.model.element.java.JavaField;
+import com.felipestanzani.beyondsight.model.element.java.JavaMethod;
 import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
 import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
