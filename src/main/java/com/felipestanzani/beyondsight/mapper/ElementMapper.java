@@ -1,27 +1,19 @@
 package com.felipestanzani.beyondsight.mapper;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.ImpactedMethodResponse;
 import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
+import com.felipestanzani.beyondsight.dto.ImpactedMethodResponse;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JavaMethodMapper {
+public class ElementMapper {
 
-    private JavaMethodMapper() {
+    private ElementMapper() {
     }
 
-    /**
-     * Maps a list of ElementImpactQueryResult to a Map of ClassImpactResponse
-     * objects,
-     * grouped by className.
-     *
-     * @param results List of ElementImpactQueryResult
-     * @return Map where key is className and value is ClassImpactResponse
-     */
-    public static Map<String, ClassImpactResponse> mapMethodResultsToClassImpactResponses(
+    public static Map<String, ClassImpactResponse> mapResultsToClassImpactResponses(
             List<ElementImpactQueryResult> results) {
         return results.stream()
                 .collect(Collectors.groupingBy(
@@ -30,8 +22,7 @@ public class JavaMethodMapper {
                                 Collectors.toList(),
                                 rows -> {
                                     String filePath = rows.getFirst().filePath();
-                                    List<ImpactedMethodResponse> methods = rows
-                                            .stream()
+                                    List<ImpactedMethodResponse> methods = rows.stream()
                                             .map(row -> new ImpactedMethodResponse(
                                                     row.methodName(),
                                                     row.methodSignature(),
@@ -44,8 +35,7 @@ public class JavaMethodMapper {
                                             filePath,
                                             null,
                                             methods,
-                                            List.of() // No fields in method
-                                                      // impact analysis
+                                            List.of() // No fields in field impact analysis
                                     );
                                 })));
     }
