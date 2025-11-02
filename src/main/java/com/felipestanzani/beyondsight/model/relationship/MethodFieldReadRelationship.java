@@ -3,10 +3,7 @@ package com.felipestanzani.beyondsight.model.relationship;
 import com.felipestanzani.beyondsight.model.element.java.JavaField;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.RelationshipProperties;
-import org.springframework.data.neo4j.core.schema.TargetNode;
+import org.springframework.data.neo4j.core.schema.*;
 
 import java.time.LocalDateTime;
 
@@ -14,8 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @RelationshipProperties
 public class MethodFieldReadRelationship {
-    @Id
-    @GeneratedValue
+    @RelationshipId
     private String id;
 
     @TargetNode
