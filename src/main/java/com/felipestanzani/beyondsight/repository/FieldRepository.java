@@ -1,17 +1,13 @@
 package com.felipestanzani.beyondsight.repository;
 
 import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
-import com.felipestanzani.beyondsight.model.JavaField;
-import lombok.NonNull;
-import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface JavaFieldRepository extends Neo4jRepository<@NonNull JavaField, @NonNull String> {
-
-       @Query("""
+public interface FieldRepository {
+    @Query("""
                      // Direct impact: methods that directly read/write the field
                      MATCH (f:Field {name: $fieldName})<-[:HAS_FIELD]-(c:Class {name: $className})
                      MATCH (m:Method)-[r:WRITES|READS]->(f)
@@ -49,6 +45,6 @@ public interface JavaFieldRepository extends Neo4jRepository<@NonNull JavaField,
                             m2.name as methodName, m2.signature as methodSignature, m2.filePath as methodFilePath,
                             type(r) as impactType
                      """)
-       List<ElementImpactQueryResult> findFullFieldImpact(@Param("fieldName") String fieldName,
-                                                          @Param("className") String className);
+    List<ElementImpactQueryResult> findFullFieldImpact(@Param("fieldName") String fieldName,
+                                                       @Param("className") String className);
 }

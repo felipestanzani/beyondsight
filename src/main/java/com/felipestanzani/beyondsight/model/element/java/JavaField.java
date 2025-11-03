@@ -1,5 +1,7 @@
-package com.felipestanzani.beyondsight.model;
+package com.felipestanzani.beyondsight.model.element.java;
 
+import com.felipestanzani.beyondsight.model.element.interfaces.FieldInterface;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,14 +11,11 @@ import org.springframework.data.neo4j.core.schema.Node;
 @Setter
 @Getter
 @NoArgsConstructor
-@Node("Field")
-public class JavaField {
+@AllArgsConstructor
+@Node("JavaField")
+public class JavaField implements FieldInterface {
     @Id
     private String name;
-
-    public JavaField(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

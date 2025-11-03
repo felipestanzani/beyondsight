@@ -1,5 +1,9 @@
-package com.felipestanzani.beyondsight.model;
+package com.felipestanzani.beyondsight.model.element.java;
 
+import com.felipestanzani.beyondsight.model.element.interfaces.ClassElement;
+import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
+import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,12 +15,12 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-@Node("Class")
-public class JavaClass {
+@AllArgsConstructor
+@Node("JavaClass")
+public class JavaClass implements ClassElement {
     @Id
     private String name;
 
-    @Property("filePath")
     private String filePath;
 
     @Relationship(type = "HAS_FIELD")
