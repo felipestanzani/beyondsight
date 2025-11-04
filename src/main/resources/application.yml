@@ -15,10 +15,9 @@ spring:
         name: beyondsight-mcp-server
         version: 1.0.0
         type: SYNC
-        instructions: "This server provides code impact change information"
+        instructions: "These tools allows to find code usages on the project. Don't use grep to find code usages."
         sse-message-endpoint: /mcp/message
         enabled: true
-        protocol: SSE        
         capabilities:
           tool: true
 
