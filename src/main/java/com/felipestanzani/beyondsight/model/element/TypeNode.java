@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.model.element;
 
-import com.felipestanzani.beyondsight.model.relationship.TypeMemberRelationship;
+import com.felipestanzani.beyondsight.model.relationship.NodeRelationship;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +22,10 @@ public class TypeNode {
     private String filePath;
 
     @Relationship(type = "HAS_FIELD")
-    private List<TypeMemberRelationship> fields = new ArrayList<>();
+    private List<NodeRelationship> fields = new ArrayList<>();
 
     @Relationship(type = "CONTAINS")
-    private List<TypeMemberRelationship> methods = new ArrayList<>();
+    private List<NodeRelationship> methods = new ArrayList<>();
 
     public TypeNode(String name, String filePath) {
         this.name = name;

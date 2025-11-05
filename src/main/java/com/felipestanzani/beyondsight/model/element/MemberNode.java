@@ -1,7 +1,6 @@
 package com.felipestanzani.beyondsight.model.element;
 
-import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
-import com.felipestanzani.beyondsight.model.relationship.MethodFieldRelationship;
+import com.felipestanzani.beyondsight.model.relationship.NodeRelationship;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +24,13 @@ public class MemberNode implements Member {
     private String filePath;
 
     @Relationship(type = "CALLS")
-    private List<MethodCallRelationship> calledMethods = new ArrayList<>();
+    private List<NodeRelationship> calledMethods = new ArrayList<>();
 
     @Relationship(type = "READS")
-    private List<MethodFieldRelationship> readFields = new ArrayList<>();
+    private List<NodeRelationship> readFields = new ArrayList<>();
 
     @Relationship(type = "WRITES")
-    private List<MethodFieldRelationship> writtenFields = new ArrayList<>();
+    private List<NodeRelationship> writtenFields = new ArrayList<>();
 
     public MemberNode(String name, String signature, String filePath) {
         this.name = name;

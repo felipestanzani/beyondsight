@@ -4,9 +4,7 @@ import com.felipestanzani.beyondsight.model.element.FieldNode;
 import com.felipestanzani.beyondsight.model.element.MemberNode;
 import com.felipestanzani.beyondsight.model.element.TypeNode;
 import com.felipestanzani.beyondsight.model.enums.LanguageExtension;
-import com.felipestanzani.beyondsight.model.relationship.MethodFieldRelationship;
-import com.felipestanzani.beyondsight.model.relationship.TypeMemberRelationship;
-import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
+import com.felipestanzani.beyondsight.model.relationship.NodeRelationship;
 import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
@@ -80,7 +78,7 @@ public class JavaParsingService implements ParsingService {
 
             // Extract line number from the field declaration
             Integer lineNumber = fieldDecl.getBegin().map(range -> range.line).orElse(null);
-            var fieldRel = new TypeMemberRelationship(savedField, lineNumber);
+            var fieldRel = new NodeRelationship(savedField, lineNumber);
             typeNode.getFields().add(fieldRel);
         });
     }
@@ -94,7 +92,7 @@ public class JavaParsingService implements ParsingService {
 
         // Extract line number from the method declaration
         Integer lineNumber = method.getBegin().map(range -> range.line).orElse(null);
-        TypeMemberRelationship methodRel = new TypeMemberRelationship(savedJavaMethod, lineNumber);
+        NodeRelationship methodRel = new NodeRelationship(savedJavaMethod, lineNumber);
         typeNode.getMethods().add(methodRel);
 
         method.findAll(MethodCallExpr.class).forEach(call -> createCalls(savedJavaMethod, call));
@@ -118,9 +116,9 @@ public class JavaParsingService implements ParsingService {
             var savedField = fieldRepository.save(field);
 
             // Extract line number from the field access
-            Integer lineNumber = access.getBegin().map(range -> range.line).orElse(null);
-            MethodFieldRelationship readRel = new MethodFieldRelationship(savedField, lineNumber);
-            javaMethod.getReadFields().add(readRel);
+            var lineNumber = access.getBegin().map(range -> range.line).orElse(null);
+            var relationship = new NodeRelationship(savedField, lineNumber);
+            javaMethod.getReadFields().add(relationship);
         }
     }
 
@@ -129,12 +127,11 @@ public class JavaParsingService implements ParsingService {
         if (!targetName.isEmpty()) {
             FieldNode field = new FieldNode(targetName);
             var savedField = fieldRepository.save(field);
-            fieldRepository.save(savedField);
 
             // Extract line number from the assignment expression
-            Integer lineNumber = assign.getBegin().map(range -> range.line).orElse(null);
-            MethodFieldRelationship writeRel = new MethodFieldRelationship(savedField, lineNumber);
-            javaMethod.getWrittenFields().add(writeRel);
+            var lineNumber = assign.getBegin().map(range -> range.line).orElse(null);
+            var relationship = new NodeRelationship(savedField, lineNumber);
+            javaMethod.getWrittenFields().add(relationship);
         }
     }
 
@@ -144,9 +141,9 @@ public class JavaParsingService implements ParsingService {
         var savedCalledMethod = methodRepository.save(calledMethod);
 
         // Extract line number from the method call expression
-        Integer lineNumber = call.getBegin().map(range -> range.line).orElse(null);
-        MethodCallRelationship callRel = new MethodCallRelationship(savedCalledMethod, lineNumber);
-        javaMethod.getCalledMethods().add(callRel);
+        var lineNumber = call.getBegin().map(range -> range.line).orElse(null);
+        var relationship = new NodeRelationship(savedCalledMethod, lineNumber);
+        javaMethod.getCalledMethods().add(relationship);
     }
 
     public String getNodeName(Expression expression) {

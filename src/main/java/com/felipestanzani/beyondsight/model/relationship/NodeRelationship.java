@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @RelationshipProperties
-public class TypeMemberRelationship {
+public class NodeRelationship {
     @RelationshipId
     private String id;
 
@@ -21,23 +21,19 @@ public class TypeMemberRelationship {
 
     private Integer lineNumber;
 
-    private Double confidence;
-
-    public TypeMemberRelationship(Member member, Integer lineNumber) {
+    public NodeRelationship(Member member, Integer lineNumber) {
         this.member = member;
         this.lineNumber = lineNumber;
         this.createdAt = LocalDateTime.now();
-        this.confidence = 1.0;
     }
 
     @Override
     public String toString() {
-        return "TypeMemberRelationship{" +
+        return "NodeRelationship{" +
                 "id=" + id +
                 ", member=" + member +
                 ", createdAt=" + createdAt +
                 ", lineNumber=" + lineNumber +
-                ", confidence=" + confidence +
                 '}';
     }
 }
