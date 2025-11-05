@@ -3,6 +3,7 @@ package com.felipestanzani.beyondsight.service;
 import com.felipestanzani.beyondsight.model.element.java.JavaClass;
 import com.felipestanzani.beyondsight.model.element.java.JavaField;
 import com.felipestanzani.beyondsight.model.element.java.JavaMethod;
+import com.felipestanzani.beyondsight.model.enums.LanguageExtension;
 import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
 import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
@@ -12,7 +13,6 @@ import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
-import com.felipestanzani.beyondsight.exception.ProjectParsingException;
 import com.felipestanzani.beyondsight.exception.FileParsingException;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
@@ -24,32 +24,19 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-@Service
+@Slf4j
+@Service(LanguageExtension.JAVA)
 public class JavaParsingService implements ParsingService {
-
-    private static final Logger log = LoggerFactory.getLogger(JavaParsingService.class);
 
     private final JavaClassRepository classRepository;
     private final JavaFieldRepository fieldRepository;
     private final JavaMethodRepository methodRepository;
-
-    public void parseProject(String projectPath) {
-        try (Stream<Path> stream = Files.walk(Path.of(projectPath))) {
-            stream.filter(path -> path.toString().endsWith(".java"))
-                    .forEach(this::parseFile);
-        } catch (Exception e) {
-            throw new ProjectParsingException(projectPath, e);
-        }
-    }
 
     public void clearDatabase() {
         log.warn("Clearing entire Neo4j database...");

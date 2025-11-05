@@ -5,6 +5,7 @@ import com.felipestanzani.beyondsight.exception.AsyncParsingException;
 import com.felipestanzani.beyondsight.model.enums.ParseStatus;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
 import com.felipestanzani.beyondsight.service.interfaces.ProjectIndexingService;
+import com.felipestanzani.beyondsight.service.interfaces.ProjectScannerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectIndexingServiceImpl implements ProjectIndexingService {
 
+    private final ProjectScannerService scannerService;
     private final ParsingService parsingService;
     private volatile ParseStatus parseStatus = ParseStatus.IDLE;
     private final Object lock = new Object();
@@ -37,7 +39,7 @@ public class ProjectIndexingServiceImpl implements ProjectIndexingService {
         Thread.startVirtualThread(() -> {
             try {
                 parsingService.clearDatabase();
-                parsingService.parseProject(path);
+                scannerService.scan(path);
                 parseStatus = ParseStatus.COMPLETED;
             } catch (Exception e) {
                 parseStatus = ParseStatus.FAILED;

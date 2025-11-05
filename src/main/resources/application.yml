@@ -23,9 +23,9 @@ spring:
 
 logging:
   level:
-    root: DEBUG
-    com: DEBUG
+    root: INFO
+    com: INFO
 
     org:
       neo4j:
-        driver: DEBUG
+        driver: INFO
