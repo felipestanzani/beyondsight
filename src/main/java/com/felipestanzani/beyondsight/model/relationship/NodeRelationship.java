@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.model.relationship;
 
-import com.felipestanzani.beyondsight.model.element.Member;
+import com.felipestanzani.beyondsight.model.element.Element;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.*;
@@ -15,14 +15,14 @@ public class NodeRelationship {
     private String id;
 
     @TargetNode
-    private Member member;
+    private Element element;
 
     private LocalDateTime createdAt;
 
     private Integer lineNumber;
 
-    public NodeRelationship(Member member, Integer lineNumber) {
-        this.member = member;
+    public NodeRelationship(Element element, Integer lineNumber) {
+        this.element = element;
         this.lineNumber = lineNumber;
         this.createdAt = LocalDateTime.now();
     }
@@ -31,7 +31,7 @@ public class NodeRelationship {
     public String toString() {
         return "NodeRelationship{" +
                 "id=" + id +
-                ", member=" + member +
+                ", element=" + element +
                 ", createdAt=" + createdAt +
                 ", lineNumber=" + lineNumber +
                 '}';

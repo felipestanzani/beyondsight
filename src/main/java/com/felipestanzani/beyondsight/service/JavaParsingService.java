@@ -1,12 +1,14 @@
 package com.felipestanzani.beyondsight.service;
 
+import com.felipestanzani.beyondsight.model.FileNode;
 import com.felipestanzani.beyondsight.model.element.FieldNode;
 import com.felipestanzani.beyondsight.model.element.MemberNode;
 import com.felipestanzani.beyondsight.model.element.TypeNode;
 import com.felipestanzani.beyondsight.model.enums.LanguageExtension;
 import com.felipestanzani.beyondsight.model.relationship.NodeRelationship;
+import com.felipestanzani.beyondsight.repository.FieldRepository;
+import com.felipestanzani.beyondsight.repository.FileRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
-import com.felipestanzani.beyondsight.repository.java.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
 import com.felipestanzani.beyondsight.exception.FileParsingException;
@@ -30,8 +32,9 @@ import java.nio.file.Path;
 @Service(LanguageExtension.JAVA)
 public class JavaParsingService implements ParsingService {
 
+    private final FileRepository fileRepository;
     private final JavaClassRepository classRepository;
-    private final JavaFieldRepository fieldRepository;
+    private final FieldRepository fieldRepository;
     private final JavaMethodRepository methodRepository;
 
     public void clearDatabase() {
@@ -41,34 +44,57 @@ public class JavaParsingService implements ParsingService {
         classRepository.deleteAll();
     }
 
-    public void parseFile(Path javaFile) {
+    public void parseFile(Path filePath) {
         try {
             ParserConfiguration config = new ParserConfiguration();
             config.setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_21);
             var javaParser = new JavaParser(config);
 
-            String filePath = javaFile.toAbsolutePath().toString();
-            var unit = javaParser.parse(javaFile)
+            var compilationUnit = javaParser.parse(filePath)
                     .getResult()
-                    .orElseThrow(() -> new FileParsingException(javaFile));
+                    .orElseThrow(() -> new FileParsingException(filePath));
 
-            unit.findAll(ClassOrInterfaceDeclaration.class).forEach(cls -> {
-                String className = cls.getNameAsString();
+            var savedFile = createFile(filePath);
 
-                TypeNode typeNode = new TypeNode(className, filePath);
-                var savedJavaClass = classRepository.save(typeNode);
+            compilationUnit.findAll(ClassOrInterfaceDeclaration.class).forEach(cls ->
+                    createClass(savedFile, cls)
+            );
 
-                cls.getFields().forEach(fieldDecl -> createFields(savedJavaClass, fieldDecl));
+            fileRepository.save(savedFile);
 
-                cls.getMethods().forEach(method -> createMethods(filePath, savedJavaClass, method));
-
-                classRepository.save(savedJavaClass);
-            });
 
         } catch (Exception e) {
-            throw new FileParsingException(javaFile, e);
+            throw new FileParsingException(filePath, e);
         }
     }
+
+    private FileNode createFile(Path filePath) {
+        var fileNode = new FileNode(
+        filePath.getFileName().toString(),
+        LanguageExtension.JAVA,
+        "",
+        filePath.toString(),
+        filePath.toAbsolutePath().toString());
+
+        return fileRepository.save(fileNode);
+    }
+
+    private void createClass(FileNode fileNode, ClassOrInterfaceDeclaration classDeclaration) {
+        String className = classDeclaration.getNameAsString();
+
+        TypeNode typeNode = new TypeNode(className, fileNode.getAbsolutePath());
+        var savedTypeNode = classRepository.save(typeNode);
+
+        classDeclaration.getFields().forEach(fieldDecl -> createFields(savedTypeNode, fieldDecl));
+        classDeclaration.getMethods().forEach(method -> createMethods(fileNode.getAbsolutePath(), savedTypeNode, method));
+
+        var finalTypeNode = classRepository.save(savedTypeNode);
+
+        Integer lineNumber = classDeclaration.getBegin().map(range -> range.line).orElse(null);
+        var relationship = new NodeRelationship(finalTypeNode, lineNumber);
+        fileNode.getTypes().add(relationship);
+    }
+
 
     private void createFields(TypeNode typeNode, FieldDeclaration fieldDecl) {
         fieldDecl.getVariables().forEach(variable -> {
@@ -76,12 +102,13 @@ public class JavaParsingService implements ParsingService {
             FieldNode field = new FieldNode(fieldName);
             var savedField = fieldRepository.save(field);
 
-            // Extract line number from the field declaration
             Integer lineNumber = fieldDecl.getBegin().map(range -> range.line).orElse(null);
-            var fieldRel = new NodeRelationship(savedField, lineNumber);
-            typeNode.getFields().add(fieldRel);
+            var relationship = new NodeRelationship(savedField, lineNumber);
+            typeNode.getFields().add(relationship);
         });
     }
+
+
 
     private void createMethods(String filePath, TypeNode typeNode, MethodDeclaration method) {
         String methodName = method.getNameAsString();

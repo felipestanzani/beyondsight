@@ -12,7 +12,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 @NoArgsConstructor
 @AllArgsConstructor
 @Node("Field")
-public class FieldNode implements Member {
+public class FieldNode implements Element {
     @Id
     private String name;
 

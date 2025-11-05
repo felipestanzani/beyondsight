@@ -14,8 +14,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Node({"Class", "Interface", "Enum", "Record", "AnnotationType"})
-public class TypeNode {
+@Node("Class")//{"Class", "Interface", "Enum", "Record", "AnnotationType"}
+public class TypeNode implements Element {
     @Id
     private String name;
 

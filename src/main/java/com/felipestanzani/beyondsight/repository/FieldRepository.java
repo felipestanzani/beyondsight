@@ -1,12 +1,15 @@
 package com.felipestanzani.beyondsight.repository;
 
 import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
+import com.felipestanzani.beyondsight.model.element.FieldNode;
+import lombok.NonNull;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface FieldRepository {
+public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @NonNull String> {
     @Query("""
                      // Direct impact: methods that directly read/write the field
                      MATCH (f:Field {name: $fieldName})<-[:HAS_FIELD]-(c:Class {name: $className})

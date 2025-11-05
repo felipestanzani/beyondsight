@@ -14,8 +14,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Node({"Method", "Constructor", "Initializer"})
-public class MemberNode implements Member {
+@Node("Method") //{"Method", "Constructor", "Initializer"}
+public class MemberNode implements Element {
     @Id
     private String signature;
 
