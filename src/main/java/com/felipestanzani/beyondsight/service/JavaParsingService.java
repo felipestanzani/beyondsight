@@ -1,11 +1,11 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.model.element.java.FieldNode;
-import com.felipestanzani.beyondsight.model.element.java.MemberNode;
-import com.felipestanzani.beyondsight.model.element.java.TypeNode;
+import com.felipestanzani.beyondsight.model.element.FieldNode;
+import com.felipestanzani.beyondsight.model.element.MemberNode;
+import com.felipestanzani.beyondsight.model.element.TypeNode;
 import com.felipestanzani.beyondsight.model.enums.LanguageExtension;
 import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
-import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
+import com.felipestanzani.beyondsight.model.relationship.ClassMemberRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodFieldRelationship;
 import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
@@ -95,7 +95,7 @@ public class JavaParsingService implements ParsingService {
 
         // Extract line number from the method declaration
         Integer lineNumber = method.getBegin().map(range -> range.line).orElse(null);
-        ClassMethodRelationship methodRel = new ClassMethodRelationship(savedJavaMethod, lineNumber);
+        ClassMemberRelationship methodRel = new ClassMemberRelationship(savedJavaMethod, lineNumber);
         typeNode.getMethods().add(methodRel);
 
         method.findAll(MethodCallExpr.class).forEach(call -> createCalls(savedJavaMethod, call));

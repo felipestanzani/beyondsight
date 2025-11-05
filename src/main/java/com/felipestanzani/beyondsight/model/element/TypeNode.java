@@ -1,7 +1,7 @@
-package com.felipestanzani.beyondsight.model.element.java;
+package com.felipestanzani.beyondsight.model.element;
 
 import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
-import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
+import com.felipestanzani.beyondsight.model.relationship.ClassMemberRelationship;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class TypeNode {
     private List<ClassFieldRelationship> fields = new ArrayList<>();
 
     @Relationship(type = "CONTAINS")
-    private List<ClassMethodRelationship> methods = new ArrayList<>();
+    private List<ClassMemberRelationship> methods = new ArrayList<>();
 
     public TypeNode(String name, String filePath) {
         this.name = name;

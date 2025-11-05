@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.model.relationship;
 
-import com.felipestanzani.beyondsight.model.element.java.FieldNode;
+import com.felipestanzani.beyondsight.model.element.FieldNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.*;

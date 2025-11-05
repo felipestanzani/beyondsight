@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.repository.java;
 
-import com.felipestanzani.beyondsight.model.element.java.FieldNode;
+import com.felipestanzani.beyondsight.model.element.FieldNode;
 import com.felipestanzani.beyondsight.repository.FieldRepository;
 import lombok.NonNull;
 import org.springframework.data.neo4j.repository.Neo4jRepository;

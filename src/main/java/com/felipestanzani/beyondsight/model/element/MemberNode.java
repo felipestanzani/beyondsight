@@ -1,4 +1,4 @@
-package com.felipestanzani.beyondsight.model.element.java;
+package com.felipestanzani.beyondsight.model.element;
 
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodFieldRelationship;
