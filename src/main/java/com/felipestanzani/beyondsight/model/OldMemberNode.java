@@ -1,9 +1,9 @@
 package com.felipestanzani.beyondsight.model;
 
+import com.felipestanzani.beyondsight.model.element.java.TypeNode;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.HashSet;
@@ -12,11 +12,10 @@ import java.util.Set;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.INCOMING;
 
-@Node(labels = {"Field", "Method", "Constructor", "Initializer"})
 @Data
 @NoArgsConstructor
 @Builder @AllArgsConstructor
-public class MemberNode implements AstNode {
+public class OldMemberNode implements AstNode {
     @Id @GeneratedValue private Long id;
     private String name;
     private Integer beginLine;

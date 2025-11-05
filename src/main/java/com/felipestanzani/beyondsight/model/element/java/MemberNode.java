@@ -1,9 +1,7 @@
 package com.felipestanzani.beyondsight.model.element.java;
 
-import com.felipestanzani.beyondsight.model.element.interfaces.MethodInterface;
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
-import com.felipestanzani.beyondsight.model.relationship.MethodFieldReadRelationship;
-import com.felipestanzani.beyondsight.model.relationship.MethodFieldWriteRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodFieldRelationship;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +15,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Node("JavaMethod")
-public class JavaMethod implements MethodInterface {
+@Node({"Method", "Constructor", "Initializer"})
+public class MemberNode {
     @Id
     private String signature;
 
@@ -30,12 +28,12 @@ public class JavaMethod implements MethodInterface {
     private List<MethodCallRelationship> calledMethods = new ArrayList<>();
 
     @Relationship(type = "READS")
-    private List<MethodFieldReadRelationship> readFields = new ArrayList<>();
+    private List<MethodFieldRelationship> readFields = new ArrayList<>();
 
     @Relationship(type = "WRITES")
-    private List<MethodFieldWriteRelationship> writtenFields = new ArrayList<>();
+    private List<MethodFieldRelationship> writtenFields = new ArrayList<>();
 
-    public JavaMethod(String name, String signature, String filePath) {
+    public MemberNode(String name, String signature, String filePath) {
         this.name = name;
         this.signature = signature;
         this.filePath = filePath;
@@ -43,7 +41,7 @@ public class JavaMethod implements MethodInterface {
 
     @Override
     public String toString() {
-        return "JavaMethod{" +
+        return "MemberNode{" +
                 "name='" + name + '\'' +
                 ", signature='" + signature + '\'' +
                 ", filePath='" + filePath + '\'' +

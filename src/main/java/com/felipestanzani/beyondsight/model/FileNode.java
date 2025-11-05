@@ -1,5 +1,6 @@
 package com.felipestanzani.beyondsight.model;
 
+import com.felipestanzani.beyondsight.model.element.java.TypeNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;

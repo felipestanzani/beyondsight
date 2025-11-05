@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @RelationshipProperties
-public class MethodFieldWriteRelationship {
+public class MethodFieldRelationship {
     @RelationshipId
     private String id;
 
@@ -23,7 +23,7 @@ public class MethodFieldWriteRelationship {
 
     private Double confidence;
 
-    public MethodFieldWriteRelationship(JavaField field, Integer lineNumber) {
+    public MethodFieldRelationship(JavaField field, Integer lineNumber) {
         this.field = field;
         this.lineNumber = lineNumber;
         this.createdAt = LocalDateTime.now();
@@ -32,7 +32,7 @@ public class MethodFieldWriteRelationship {
 
     @Override
     public String toString() {
-        return "MethodFieldWriteRelationship{" +
+        return "MethodFieldRelationship{" +
                 "id=" + id +
                 ", field=" + field +
                 ", createdAt=" + createdAt +

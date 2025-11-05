@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.model.relationship;
 
-import com.felipestanzani.beyondsight.model.element.java.JavaMethod;
+import com.felipestanzani.beyondsight.model.element.java.MemberNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.*;
@@ -15,7 +15,7 @@ public class ClassMethodRelationship {
     private String id;
 
     @TargetNode
-    private JavaMethod method;
+    private MemberNode method;
 
     private LocalDateTime createdAt;
 
@@ -23,7 +23,7 @@ public class ClassMethodRelationship {
 
     private Double confidence;
 
-    public ClassMethodRelationship(JavaMethod method, Integer lineNumber) {
+    public ClassMethodRelationship(MemberNode method, Integer lineNumber) {
         this.method = method;
         this.lineNumber = lineNumber;
         this.createdAt = LocalDateTime.now();

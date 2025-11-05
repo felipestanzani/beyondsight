@@ -1,14 +1,13 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.model.element.java.JavaClass;
+import com.felipestanzani.beyondsight.model.element.java.MemberNode;
+import com.felipestanzani.beyondsight.model.element.java.TypeNode;
 import com.felipestanzani.beyondsight.model.element.java.JavaField;
-import com.felipestanzani.beyondsight.model.element.java.JavaMethod;
 import com.felipestanzani.beyondsight.model.enums.LanguageExtension;
 import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
 import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
-import com.felipestanzani.beyondsight.model.relationship.MethodFieldReadRelationship;
-import com.felipestanzani.beyondsight.model.relationship.MethodFieldWriteRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodFieldRelationship;
 import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
@@ -52,15 +51,15 @@ public class JavaParsingService implements ParsingService {
             var javaParser = new JavaParser(config);
 
             String filePath = javaFile.toAbsolutePath().toString();
-            var cu = javaParser.parse(javaFile)
+            var unit = javaParser.parse(javaFile)
                     .getResult()
                     .orElseThrow(() -> new FileParsingException(javaFile));
 
-            cu.findAll(ClassOrInterfaceDeclaration.class).forEach(cls -> {
+            unit.findAll(ClassOrInterfaceDeclaration.class).forEach(cls -> {
                 String className = cls.getNameAsString();
 
-                JavaClass javaClass = new JavaClass(className, filePath);
-                var savedJavaClass = classRepository.save(javaClass);
+                TypeNode typeNode = new TypeNode(className, filePath);
+                var savedJavaClass = classRepository.save(typeNode);
 
                 cls.getFields().forEach(fieldDecl -> createFields(savedJavaClass, fieldDecl));
 
@@ -74,7 +73,7 @@ public class JavaParsingService implements ParsingService {
         }
     }
 
-    private void createFields(JavaClass javaClass, FieldDeclaration fieldDecl) {
+    private void createFields(TypeNode typeNode, FieldDeclaration fieldDecl) {
         fieldDecl.getVariables().forEach(variable -> {
             String fieldName = variable.getNameAsString();
             JavaField field = new JavaField(fieldName);
@@ -83,21 +82,21 @@ public class JavaParsingService implements ParsingService {
             // Extract line number from the field declaration
             Integer lineNumber = fieldDecl.getBegin().map(range -> range.line).orElse(null);
             ClassFieldRelationship fieldRel = new ClassFieldRelationship(savedField, lineNumber);
-            javaClass.getFields().add(fieldRel);
+            typeNode.getFields().add(fieldRel);
         });
     }
 
-    private void createMethods(String filePath, JavaClass javaClass, MethodDeclaration method) {
+    private void createMethods(String filePath, TypeNode typeNode, MethodDeclaration method) {
         String methodName = method.getNameAsString();
         String methodSignature = method.getSignature().asString();
 
-        JavaMethod javaMethod = new JavaMethod(methodName, methodSignature, filePath);
+        MemberNode javaMethod = new MemberNode(methodName, methodSignature, filePath);
         var savedJavaMethod = methodRepository.save(javaMethod);
 
         // Extract line number from the method declaration
         Integer lineNumber = method.getBegin().map(range -> range.line).orElse(null);
         ClassMethodRelationship methodRel = new ClassMethodRelationship(savedJavaMethod, lineNumber);
-        javaClass.getMethods().add(methodRel);
+        typeNode.getMethods().add(methodRel);
 
         method.findAll(MethodCallExpr.class).forEach(call -> createCalls(savedJavaMethod, call));
 
@@ -108,7 +107,7 @@ public class JavaParsingService implements ParsingService {
         methodRepository.save(savedJavaMethod);
     }
 
-    private void createReads(JavaMethod javaMethod, FieldAccessExpr access) {
+    private void createReads(MemberNode javaMethod, FieldAccessExpr access) {
         boolean isWrite = access.getParentNode()
                 .map(parent -> parent instanceof AssignExpr assignExpr
                         && assignExpr.getTarget() == access)
@@ -121,12 +120,12 @@ public class JavaParsingService implements ParsingService {
 
             // Extract line number from the field access
             Integer lineNumber = access.getBegin().map(range -> range.line).orElse(null);
-            MethodFieldReadRelationship readRel = new MethodFieldReadRelationship(savedField, lineNumber);
+            MethodFieldRelationship readRel = new MethodFieldRelationship(savedField, lineNumber);
             javaMethod.getReadFields().add(readRel);
         }
     }
 
-    private void createWrites(JavaMethod javaMethod, AssignExpr assign) {
+    private void createWrites(MemberNode javaMethod, AssignExpr assign) {
         String targetName = getNodeName(assign.getTarget());
         if (!targetName.isEmpty()) {
             JavaField field = new JavaField(targetName);
@@ -135,14 +134,14 @@ public class JavaParsingService implements ParsingService {
 
             // Extract line number from the assignment expression
             Integer lineNumber = assign.getBegin().map(range -> range.line).orElse(null);
-            MethodFieldWriteRelationship writeRel = new MethodFieldWriteRelationship(savedField, lineNumber);
+            MethodFieldRelationship writeRel = new MethodFieldRelationship(savedField, lineNumber);
             javaMethod.getWrittenFields().add(writeRel);
         }
     }
 
-    private void createCalls(JavaMethod javaMethod, MethodCallExpr call) {
+    private void createCalls(MemberNode javaMethod, MethodCallExpr call) {
         String calledMethodName = call.getNameAsString();
-        JavaMethod calledMethod = new JavaMethod(calledMethodName, calledMethodName, "");
+        MemberNode calledMethod = new MemberNode(calledMethodName, calledMethodName, "");
         var savedCalledMethod = methodRepository.save(calledMethod);
 
         // Extract line number from the method call expression

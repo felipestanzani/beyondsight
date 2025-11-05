@@ -1,6 +1,5 @@
 package com.felipestanzani.beyondsight.model.element.java;
 
-import com.felipestanzani.beyondsight.model.element.interfaces.ClassElement;
 import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
 import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
 import lombok.AllArgsConstructor;
@@ -16,8 +15,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Node("JavaClass")
-public class JavaClass implements ClassElement {
+@Node({"Class", "Interface", "Enum", "Record", "AnnotationType"})
+public class TypeNode {
     @Id
     private String name;
 
@@ -29,14 +28,14 @@ public class JavaClass implements ClassElement {
     @Relationship(type = "CONTAINS")
     private List<ClassMethodRelationship> methods = new ArrayList<>();
 
-    public JavaClass(String name, String filePath) {
+    public TypeNode(String name, String filePath) {
         this.name = name;
         this.filePath = filePath;
     }
 
     @Override
     public String toString() {
-        return "JavaClass{" +
+        return "TypeNode{" +
                 "name='" + name + '\'' +
                 ", filePath='" + filePath + '\'' +
                 ", fields=" + fields +

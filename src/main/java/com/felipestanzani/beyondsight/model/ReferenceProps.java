@@ -24,5 +24,5 @@ public class ReferenceProps {
     private String rawTag;
 
     @TargetNode
-    private MemberNode referred; // or AstNode if referencing TypeNode
+    private OldMemberNode referred; // or AstNode if referencing TypeNode
 }
