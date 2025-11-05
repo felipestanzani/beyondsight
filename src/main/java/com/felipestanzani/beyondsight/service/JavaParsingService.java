@@ -1,8 +1,8 @@
 package com.felipestanzani.beyondsight.service;
 
+import com.felipestanzani.beyondsight.model.element.java.FieldNode;
 import com.felipestanzani.beyondsight.model.element.java.MemberNode;
 import com.felipestanzani.beyondsight.model.element.java.TypeNode;
-import com.felipestanzani.beyondsight.model.element.java.JavaField;
 import com.felipestanzani.beyondsight.model.enums.LanguageExtension;
 import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
 import com.felipestanzani.beyondsight.model.relationship.ClassMethodRelationship;
@@ -76,7 +76,7 @@ public class JavaParsingService implements ParsingService {
     private void createFields(TypeNode typeNode, FieldDeclaration fieldDecl) {
         fieldDecl.getVariables().forEach(variable -> {
             String fieldName = variable.getNameAsString();
-            JavaField field = new JavaField(fieldName);
+            FieldNode field = new FieldNode(fieldName);
             var savedField = fieldRepository.save(field);
 
             // Extract line number from the field declaration
@@ -115,7 +115,7 @@ public class JavaParsingService implements ParsingService {
 
         if (!isWrite) {
             String fieldName = access.getNameAsString();
-            JavaField field = new JavaField(fieldName);
+            FieldNode field = new FieldNode(fieldName);
             var savedField = fieldRepository.save(field);
 
             // Extract line number from the field access
@@ -128,7 +128,7 @@ public class JavaParsingService implements ParsingService {
     private void createWrites(MemberNode javaMethod, AssignExpr assign) {
         String targetName = getNodeName(assign.getTarget());
         if (!targetName.isEmpty()) {
-            JavaField field = new JavaField(targetName);
+            FieldNode field = new FieldNode(targetName);
             var savedField = fieldRepository.save(field);
             fieldRepository.save(savedField);
 

@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.model.relationship;
 
-import com.felipestanzani.beyondsight.model.element.java.JavaField;
+import com.felipestanzani.beyondsight.model.element.java.FieldNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.*;
@@ -15,7 +15,7 @@ public class MethodFieldRelationship {
     private String id;
 
     @TargetNode
-    private JavaField field;
+    private FieldNode field;
 
     private LocalDateTime createdAt;
 
@@ -23,7 +23,7 @@ public class MethodFieldRelationship {
 
     private Double confidence;
 
-    public MethodFieldRelationship(JavaField field, Integer lineNumber) {
+    public MethodFieldRelationship(FieldNode field, Integer lineNumber) {
         this.field = field;
         this.lineNumber = lineNumber;
         this.createdAt = LocalDateTime.now();
