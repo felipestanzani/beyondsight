@@ -10,14 +10,15 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @NonNull String> {
-    @Query("""
+       @Query("""
                      // Direct impact: methods that directly read/write the field
                      MATCH (f:Field {name: $fieldName})<-[:HAS_FIELD]-(c:Class {name: $className})
                      MATCH (m:Method)-[r:WRITES|READS]->(f)
                      MATCH (c2:Class)-[:CONTAINS]->(m2:Method)
                      WHERE (m2)-[:CALLS*1..]->(m) OR m2 = m
-                     RETURN DISTINCT c2.name as className, c2.filePath as filePath,
-                            m2.name as methodName, m2.signature as methodSignature, m2.filePath as methodFilePath,
+                     MATCH (file1:File)-[:CONTAINS]->(c2)
+                     RETURN DISTINCT c2.name as className, file1.absolutePath as filePath,
+                            m2.name as methodName, m2.signature as methodSignature, file1.absolutePath as methodFilePath,
                             type(r) as impactType
 
                      UNION
@@ -29,8 +30,9 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                      MATCH (m:Method)-[r:WRITES|READS]->(inheritedField)
                      MATCH (c2:Class)-[:CONTAINS]->(m2:Method)
                      WHERE (m2)-[:CALLS*1..]->(m) OR m2 = m
-                     RETURN DISTINCT c2.name as className, c2.filePath as filePath,
-                            m2.name as methodName, m2.signature as methodSignature, m2.filePath as methodFilePath,
+                     MATCH (file1:File)-[:CONTAINS]->(c2)
+                     RETURN DISTINCT c2.name as className, file1.absolutePath as filePath,
+                            m2.name as methodName, m2.signature as methodSignature, file1.absolutePath as methodFilePath,
                             type(r) as impactType
 
                      UNION
@@ -44,10 +46,11 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                      AND similarMethod <> originalMethod
                      MATCH (c2:Class)-[:CONTAINS]->(m2:Method)
                      WHERE (m2)-[:CALLS*1..]->(similarMethod) OR m2 = similarMethod
-                     RETURN DISTINCT c2.name as className, c2.filePath as filePath,
-                            m2.name as methodName, m2.signature as methodSignature, m2.filePath as methodFilePath,
+                     MATCH (file1:File)-[:CONTAINS]->(c2)
+                     RETURN DISTINCT c2.name as className, file1.absolutePath as filePath,
+                            m2.name as methodName, m2.signature as methodSignature, file1.absolutePath as methodFilePath,
                             type(r) as impactType
                      """)
-    List<ElementImpactQueryResult> findFullFieldImpact(@Param("fieldName") String fieldName,
-                                                       @Param("className") String className);
+       List<ElementImpactQueryResult> findFullFieldImpact(@Param("fieldName") String fieldName,
+                     @Param("className") String className);
 }

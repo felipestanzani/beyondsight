@@ -19,24 +19,20 @@ public class TypeNode implements Element {
     @Id
     private String name;
 
-    private String filePath;
-
     @Relationship(type = "HAS_FIELD")
     private List<NodeRelationship> fields = new ArrayList<>();
 
     @Relationship(type = "CONTAINS")
     private List<NodeRelationship> methods = new ArrayList<>();
 
-    public TypeNode(String name, String filePath) {
+    public TypeNode(String name) {
         this.name = name;
-        this.filePath = filePath;
     }
 
     @Override
     public String toString() {
         return "TypeNode{" +
                 "name='" + name + '\'' +
-                ", filePath='" + filePath + '\'' +
                 ", fields=" + fields +
                 ", methods=" + methods +
                 '}';

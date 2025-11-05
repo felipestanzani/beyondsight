@@ -21,8 +21,6 @@ public class MemberNode implements Element {
 
     private String name;
 
-    private String filePath;
-
     @Relationship(type = "CALLS")
     private List<NodeRelationship> calledMethods = new ArrayList<>();
 
@@ -32,10 +30,9 @@ public class MemberNode implements Element {
     @Relationship(type = "WRITES")
     private List<NodeRelationship> writtenFields = new ArrayList<>();
 
-    public MemberNode(String name, String signature, String filePath) {
+    public MemberNode(String name, String signature) {
         this.name = name;
         this.signature = signature;
-        this.filePath = filePath;
     }
 
     @Override
@@ -43,7 +40,6 @@ public class MemberNode implements Element {
         return "MemberNode{" +
                 "name='" + name + '\'' +
                 ", signature='" + signature + '\'' +
-                ", filePath='" + filePath + '\'' +
                 ", calledMethods=" + calledMethods +
                 ", readFields=" + readFields +
                 ", writtenFields=" + writtenFields +

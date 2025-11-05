@@ -82,11 +82,11 @@ public class JavaParsingService implements ParsingService {
     private void createClass(FileNode fileNode, ClassOrInterfaceDeclaration classDeclaration) {
         String className = classDeclaration.getNameAsString();
 
-        TypeNode typeNode = new TypeNode(className, fileNode.getAbsolutePath());
+        TypeNode typeNode = new TypeNode(className);
         var savedTypeNode = classRepository.save(typeNode);
 
         classDeclaration.getFields().forEach(fieldDecl -> createFields(savedTypeNode, fieldDecl));
-        classDeclaration.getMethods().forEach(method -> createMethods(fileNode.getAbsolutePath(), savedTypeNode, method));
+        classDeclaration.getMethods().forEach(method -> createMethods(savedTypeNode, method));
 
         var finalTypeNode = classRepository.save(savedTypeNode);
 
@@ -110,11 +110,11 @@ public class JavaParsingService implements ParsingService {
 
 
 
-    private void createMethods(String filePath, TypeNode typeNode, MethodDeclaration method) {
+    private void createMethods(TypeNode typeNode, MethodDeclaration method) {
         String methodName = method.getNameAsString();
         String methodSignature = method.getSignature().asString();
 
-        MemberNode javaMethod = new MemberNode(methodName, methodSignature, filePath);
+        MemberNode javaMethod = new MemberNode(methodName, methodSignature);
         var savedJavaMethod = methodRepository.save(javaMethod);
 
         // Extract line number from the method declaration
@@ -164,7 +164,7 @@ public class JavaParsingService implements ParsingService {
 
     private void createCalls(MemberNode javaMethod, MethodCallExpr call) {
         String calledMethodName = call.getNameAsString();
-        MemberNode calledMethod = new MemberNode(calledMethodName, calledMethodName, "");
+        MemberNode calledMethod = new MemberNode(calledMethodName, calledMethodName);
         var savedCalledMethod = methodRepository.save(calledMethod);
 
         // Extract line number from the method call expression
