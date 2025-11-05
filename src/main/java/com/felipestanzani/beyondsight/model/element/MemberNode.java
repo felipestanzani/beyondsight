@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Node({"Method", "Constructor", "Initializer"})
-public class MemberNode {
+public class MemberNode implements Member {
     @Id
     private String signature;
 

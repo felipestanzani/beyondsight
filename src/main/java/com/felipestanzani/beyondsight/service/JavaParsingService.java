@@ -4,10 +4,9 @@ import com.felipestanzani.beyondsight.model.element.FieldNode;
 import com.felipestanzani.beyondsight.model.element.MemberNode;
 import com.felipestanzani.beyondsight.model.element.TypeNode;
 import com.felipestanzani.beyondsight.model.enums.LanguageExtension;
-import com.felipestanzani.beyondsight.model.relationship.ClassFieldRelationship;
-import com.felipestanzani.beyondsight.model.relationship.ClassMemberRelationship;
-import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
 import com.felipestanzani.beyondsight.model.relationship.MethodFieldRelationship;
+import com.felipestanzani.beyondsight.model.relationship.TypeMemberRelationship;
+import com.felipestanzani.beyondsight.model.relationship.MethodCallRelationship;
 import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaFieldRepository;
 import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
@@ -81,7 +80,7 @@ public class JavaParsingService implements ParsingService {
 
             // Extract line number from the field declaration
             Integer lineNumber = fieldDecl.getBegin().map(range -> range.line).orElse(null);
-            ClassFieldRelationship fieldRel = new ClassFieldRelationship(savedField, lineNumber);
+            var fieldRel = new TypeMemberRelationship(savedField, lineNumber);
             typeNode.getFields().add(fieldRel);
         });
     }
@@ -95,7 +94,7 @@ public class JavaParsingService implements ParsingService {
 
         // Extract line number from the method declaration
         Integer lineNumber = method.getBegin().map(range -> range.line).orElse(null);
-        ClassMemberRelationship methodRel = new ClassMemberRelationship(savedJavaMethod, lineNumber);
+        TypeMemberRelationship methodRel = new TypeMemberRelationship(savedJavaMethod, lineNumber);
         typeNode.getMethods().add(methodRel);
 
         method.findAll(MethodCallExpr.class).forEach(call -> createCalls(savedJavaMethod, call));
