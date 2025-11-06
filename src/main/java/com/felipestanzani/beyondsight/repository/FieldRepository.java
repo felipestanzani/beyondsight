@@ -64,19 +64,19 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                      UNWIND [f IN allFiles WHERE f IS NOT NULL] AS file
                      WITH DISTINCT file, targetField, targetClass, impactChain
 
-                     // Step 7: Get classes in this file
-                     MATCH (file)-[:CONTAINS]->(class:Class)
+                     // Step 7: Get classes in this file (capture relationship for lineNumber)
+                     MATCH (file)-[fileContainsRel:CONTAINS]->(class:Class)
 
                      // Step 8: Get methods in this class that are in the impact chain
                      OPTIONAL MATCH (class)-[containsRel:CONTAINS]->(method:Method)
                      WHERE method IN impactChain
 
                      // Step 9: For each method, collect called methods in impact chain
-                     WITH file, class, method, containsRel, targetField, impactChain, targetClass
+                     WITH file, class, fileContainsRel, method, containsRel, targetField, impactChain, targetClass
                      OPTIONAL MATCH (method)-[callRel:CALLS]->(calledMethod:Method)
                      WHERE calledMethod IN impactChain
 
-                     WITH file, class, method, containsRel, targetField, impactChain, targetClass,
+                     WITH file, class, fileContainsRel, method, containsRel, targetField, impactChain, targetClass,
                           COLLECT(DISTINCT {
                               name: calledMethod.name,
                               signature: calledMethod.signature,
@@ -87,7 +87,7 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                      OPTIONAL MATCH (method)-[readRel:READS]->(readField:Field)
                      WHERE readField = targetField
 
-                     WITH file, class, method, containsRel, targetField, impactChain, targetClass, calledMethodsList,
+                     WITH file, class, fileContainsRel, method, containsRel, targetField, impactChain, targetClass, calledMethodsList,
                           COLLECT(DISTINCT {
                               name: readField.name,
                               lineNumber: readRel.lineNumber
@@ -97,14 +97,14 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                      OPTIONAL MATCH (method)-[writeRel:WRITES]->(writtenField:Field)
                      WHERE writtenField = targetField
 
-                     WITH file, class, method, containsRel, targetField, impactChain, targetClass, calledMethodsList, readFieldsList,
+                     WITH file, class, fileContainsRel, method, containsRel, targetField, impactChain, targetClass, calledMethodsList, readFieldsList,
                           COLLECT(DISTINCT {
                               name: writtenField.name,
                               lineNumber: writeRel.lineNumber
                           }) AS writtenFieldsList
 
                      // Step 12: Build member data (only if method exists)
-                     WITH file, class, targetField, targetClass,
+                     WITH file, class, fileContainsRel, targetField, targetClass,
                           CASE WHEN method IS NOT NULL THEN {
                               name: method.name,
                               signature: method.signature,
@@ -115,24 +115,24 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                           } ELSE null END AS memberData
 
                      // Step 13: Aggregate members by class
-                     WITH file, class, targetField, targetClass,
+                     WITH file, class, fileContainsRel, targetField, targetClass,
                           [m IN COLLECT(memberData) WHERE m IS NOT NULL] AS members
 
                      // Step 14: Get fields for this class
                      OPTIONAL MATCH (class)-[fieldRel:HAS_FIELD]->(field:Field)
                      WHERE field = targetField
 
-                     WITH file, class, members, targetClass,
+                     WITH file, class, fileContainsRel, members, targetClass,
                           COLLECT(DISTINCT {
                               name: field.name,
                               lineNumber: fieldRel.lineNumber
                           }) AS fieldsList
 
-                     // Step 15: Build type objects
+                     // Step 15: Build type objects (use fileContainsRel.lineNumber for the class lineNumber)
                      WITH file,
                           {
                               name: class.name,
-                              lineNumber: class.lineNumber,
+                              lineNumber: fileContainsRel.lineNumber,
                               fields: [f IN fieldsList WHERE f.name IS NOT NULL],
                               members: members
                           } AS typeData
@@ -147,5 +147,5 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                             [t IN types WHERE SIZE(t.members) > 0 OR SIZE(t.fields) > 0] AS types
                      """)
        List<FileResponse> findFieldReferences(@Param("fieldName") String fieldName,
-                                              @Param("className") String className);
+                     @Param("className") String className);
 }
