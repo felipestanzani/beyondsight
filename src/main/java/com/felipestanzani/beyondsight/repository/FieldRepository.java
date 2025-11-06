@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.repository;
 
-import com.felipestanzani.beyondsight.dto.FileResponseRecord;
+import com.felipestanzani.beyondsight.dto.FileResponse;
 import com.felipestanzani.beyondsight.model.element.FieldNode;
 import lombok.NonNull;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -146,6 +146,6 @@ public interface FieldRepository extends Neo4jRepository<@NonNull FieldNode, @No
                      RETURN name, absolutePath,
                             [t IN types WHERE SIZE(t.members) > 0 OR SIZE(t.fields) > 0] AS types
                      """)
-       List<FileResponseRecord> findFieldReferences(@Param("fieldName") String fieldName,
-                     @Param("className") String className);
+       List<FileResponse> findFieldReferences(@Param("fieldName") String fieldName,
+                                              @Param("className") String className);
 }

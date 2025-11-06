@@ -1,9 +1,11 @@
 package com.felipestanzani.beyondsight.dto;
 
 import java.util.List;
+import java.util.Map;
 
-public interface FileResponse {
-    String getName();
-    String getAbsolutePath();
-    List<TypeResponse> getTypes();
-}
+public record FileResponse(
+        String name,
+        String absolutePath,
+        List<Map<String, Object>> types
+) {}
+

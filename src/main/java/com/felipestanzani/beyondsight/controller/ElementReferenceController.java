@@ -1,7 +1,7 @@
 package com.felipestanzani.beyondsight.controller;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.FileResponseRecord;
+import com.felipestanzani.beyondsight.dto.FileResponse;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.execution.ToonCallResultConverter;
 import com.felipestanzani.beyondsight.service.McpImpactService;
@@ -32,7 +32,7 @@ public class ElementReferenceController {
         @Tool(description = "Returns hierarchical structure showing all usages of the field. " +
                         "Gets full transitive impact analysis for a field.", resultConverter = ToonCallResultConverter.class)
         @SuppressWarnings("unused")
-        public List<FileResponseRecord> getFieldReferences(
+        public List<FileResponse> getFieldReferences(
                         @ToolParam(description = "The name of the class that contains the field") String className,
                         @ToolParam(description = "The name of the field to be searched") String fieldName) {
                 return mcpImpactService.getFullFieldImpact(fieldName, className);

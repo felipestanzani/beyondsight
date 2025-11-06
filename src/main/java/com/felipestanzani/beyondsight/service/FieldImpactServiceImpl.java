@@ -22,7 +22,7 @@ public class FieldImpactServiceImpl implements FieldImpactService {
      * @return Complete field impact response with hierarchical structure
      */
     @Override
-    public List<FileResponseRecord> getFullFieldImpact(String fieldName, String className) {
+    public List<FileResponse> getFullFieldImpact(String fieldName, String className) {
         return fieldRepository.findFieldReferences(fieldName, className);
     }
 }
