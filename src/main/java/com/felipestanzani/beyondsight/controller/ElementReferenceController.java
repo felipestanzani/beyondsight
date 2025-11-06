@@ -2,7 +2,6 @@ package com.felipestanzani.beyondsight.controller;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.FileResponse;
-import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.execution.ToonCallResultConverter;
 import com.felipestanzani.beyondsight.service.McpImpactService;
 import lombok.RequiredArgsConstructor;
@@ -46,14 +45,10 @@ public class ElementReferenceController {
         @Tool(description = "Returns hierarchical structure showing all usages of the method. " +
                         "Gets full transitive impact analysis for the method.", resultConverter = ToonCallResultConverter.class)
         @SuppressWarnings("unused")
-        public Map<String, Object> getMethodReferences(
+        public List<FileResponse> getMethodReferences(
+                        @ToolParam(description = "The name of the class that contains the field") String className,
                         @ToolParam(description = "Signature of the method to be searched") String methodSignature) {
-                MethodImpactResponse response = mcpImpactService.getFullMethodImpact(methodSignature);
-
-                Map<String, Object> mcpResponse = new HashMap<>();
-                mcpResponse.put(RESULT, response);
-
-                return mcpResponse;
+                return mcpImpactService.getFullMethodImpact(methodSignature, className);
         }
 
         /**

@@ -1,7 +1,9 @@
 package com.felipestanzani.beyondsight.service.interfaces;
 
-import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
+import com.felipestanzani.beyondsight.dto.FileResponse;
+
+import java.util.List;
 
 public interface MethodImpactService {
-    MethodImpactResponse getFullMethodImpact(String methodSignature);
+    List<FileResponse> getFullMethodImpact(String methodSignature, String className);
 }

@@ -1,17 +1,12 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.ElementImpactQueryResult;
-import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
-import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
-import com.felipestanzani.beyondsight.mapper.MethodMapper;
+import com.felipestanzani.beyondsight.dto.FileResponse;
 import com.felipestanzani.beyondsight.repository.java.JavaMethodRepository;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -26,16 +21,7 @@ public class MethodImpactServiceImpl implements MethodImpactService {
      * @return Complete method impact response with hierarchical structure
      */
     @Override
-    public MethodImpactResponse getFullMethodImpact(String methodSignature) {
-        List<ElementImpactQueryResult> results = methodRepository.findFullMethodImpact(methodSignature);
-
-        if (results.isEmpty()) {
-            throw new ResourceNotFoundException("method", methodSignature);
-        }
-
-        // Group by class and build hierarchical structure using mapper
-        Map<String, ClassImpactResponse> classMap = MethodMapper.mapMethodResultsToClassImpactResponses(results);
-
-        return new MethodImpactResponse(methodSignature, List.copyOf(classMap.values()));
+    public List<FileResponse> getFullMethodImpact(String methodSignature, String className) {
+        return methodRepository.findMethodReferences(methodSignature, className);
     }
 }

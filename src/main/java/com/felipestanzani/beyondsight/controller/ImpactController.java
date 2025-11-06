@@ -1,7 +1,6 @@
 package com.felipestanzani.beyondsight.controller;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
@@ -39,11 +38,12 @@ public class ImpactController {
      * Returns hierarchical structure showing all classes and methods affected by
      * changing the method.
      */
-    @GetMapping("/method/full")
-    public ResponseEntity<MethodImpactResponse> getFullMethodImpact(
-            @RequestParam String methodSignature) {
-        MethodImpactResponse response = methodImpactService.getFullMethodImpact(methodSignature);
-        return ResponseEntity.ok(response);
+    @GetMapping(value = "/method/full", produces = "text/plain")
+    public ResponseEntity<String> getFullMethodImpact(
+            @RequestParam String methodSignature,
+            @RequestParam String className) {
+        var response = methodImpactService.getFullMethodImpact(methodSignature, className);
+        return ResponseEntity.ok(JToon.encode(response));
     }
 
     /**

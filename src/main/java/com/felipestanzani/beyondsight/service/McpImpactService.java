@@ -2,7 +2,6 @@ package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.FileResponse;
-import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.exception.McpResourceNotFoundException;
 import com.felipestanzani.beyondsight.exception.McpInvalidParameterException;
 import com.felipestanzani.beyondsight.exception.McpInternalErrorException;
@@ -56,20 +55,10 @@ public class McpImpactService {
      * @throws McpInvalidParameterException if methodSignature is null or empty
      * @throws McpResourceNotFoundException if method is not found
      */
-    public MethodImpactResponse getFullMethodImpact(String methodSignature) {
+    public List<FileResponse> getFullMethodImpact(String methodSignature, String className) {
         validateMethodSignature(methodSignature);
 
-        try {
-            MethodImpactResponse response = methodImpactService.getFullMethodImpact(methodSignature);
-            if (response == null) {
-                throw new McpResourceNotFoundException("No impact analysis found for method: " + methodSignature);
-            }
-            return response;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No impact analysis found for method: " + methodSignature);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving method impact: " + e.getMessage(), e);
-        }
+        return methodImpactService.getFullMethodImpact(methodSignature, className);
     }
 
     /**
