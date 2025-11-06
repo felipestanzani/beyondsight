@@ -41,32 +41,39 @@ public class FieldImpactServiceImpl implements FieldImpactService {
 
     @SuppressWarnings("unchecked")
     private TypeResponseDto convertTypeToDto(Map<String, Object> typeMap) {
+        List<Map<String, Object>> fields = (List<Map<String, Object>>) typeMap.get("fields");
+        List<Map<String, Object>> members = (List<Map<String, Object>>) typeMap.get("members");
+
         return new TypeResponseDto(
                 (String) typeMap.get("name"),
                 toInteger(typeMap.get("lineNumber")),
-                ((List<Map<String, Object>>) typeMap.get("fields")).stream()
+                fields != null ? fields.stream()
                         .map(this::convertFieldToDto)
-                        .toList(),
-                ((List<Map<String, Object>>) typeMap.get("members")).stream()
+                        .toList() : List.of(),
+                members != null ? members.stream()
                         .map(this::convertMemberToDto)
-                        .toList());
+                        .toList() : List.of());
     }
 
     @SuppressWarnings("unchecked")
     private MemberResponseDto convertMemberToDto(Map<String, Object> memberMap) {
+        List<Map<String, Object>> calledMethods = (List<Map<String, Object>>) memberMap.get("calledMethods");
+        List<Map<String, Object>> readFields = (List<Map<String, Object>>) memberMap.get("readFields");
+        List<Map<String, Object>> writtenFields = (List<Map<String, Object>>) memberMap.get("writtenFields");
+
         return new MemberResponseDto(
                 (String) memberMap.get("name"),
                 (String) memberMap.get("signature"),
                 toInteger(memberMap.get("lineNumber")),
-                ((List<Map<String, Object>>) memberMap.get("calledMethods")).stream()
+                calledMethods != null ? calledMethods.stream()
                         .map(this::convertMemberToDto)
-                        .toList(),
-                ((List<Map<String, Object>>) memberMap.get("readFields")).stream()
+                        .toList() : List.of(),
+                readFields != null ? readFields.stream()
                         .map(this::convertFieldToDto)
-                        .toList(),
-                ((List<Map<String, Object>>) memberMap.get("writtenFields")).stream()
+                        .toList() : List.of(),
+                writtenFields != null ? writtenFields.stream()
                         .map(this::convertFieldToDto)
-                        .toList());
+                        .toList() : List.of());
     }
 
     private FieldResponseDto convertFieldToDto(Map<String, Object> fieldMap) {
@@ -76,6 +83,9 @@ public class FieldImpactServiceImpl implements FieldImpactService {
     }
 
     private Integer toInteger(Object value) {
+        if (value == null) {
+            return null;
+        }
         return switch (value) {
             case Integer intValue -> intValue;
             case Long longValue -> longValue.intValue();
