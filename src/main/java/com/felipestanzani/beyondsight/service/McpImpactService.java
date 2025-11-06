@@ -1,7 +1,7 @@
 package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.FileResponse;
+import com.felipestanzani.beyondsight.dto.FileResponseRecord;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.exception.McpResourceNotFoundException;
 import com.felipestanzani.beyondsight.exception.McpInvalidParameterException;
@@ -40,7 +40,7 @@ public class McpImpactService {
      *                                      empty
      * @throws McpResourceNotFoundException if field or class is not found
      */
-    public List<FileResponse> getFullFieldImpact(String fieldName, String className) {
+    public List<FileResponseRecord> getFullFieldImpact(String fieldName, String className) {
         validateFieldName(fieldName);
         validateClassName(className);
 

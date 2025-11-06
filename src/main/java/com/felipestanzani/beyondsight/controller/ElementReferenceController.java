@@ -1,7 +1,7 @@
 package com.felipestanzani.beyondsight.controller;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.FileResponse;
+import com.felipestanzani.beyondsight.dto.FileResponseRecord;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.execution.ToonCallResultConverter;
 import com.felipestanzani.beyondsight.service.McpImpactService;
@@ -31,7 +31,8 @@ public class ElementReferenceController {
          */
         @Tool(description = "Returns hierarchical structure showing all usages of the field. " +
                         "Gets full transitive impact analysis for a field.", resultConverter = ToonCallResultConverter.class)
-        public List<FileResponse> getFieldReferences(
+        @SuppressWarnings("unused")
+        public List<FileResponseRecord> getFieldReferences(
                         @ToolParam(description = "The name of the class that contains the field") String className,
                         @ToolParam(description = "The name of the field to be searched") String fieldName) {
                 return mcpImpactService.getFullFieldImpact(fieldName, className);
@@ -44,6 +45,7 @@ public class ElementReferenceController {
          */
         @Tool(description = "Returns hierarchical structure showing all usages of the method. " +
                         "Gets full transitive impact analysis for the method.", resultConverter = ToonCallResultConverter.class)
+        @SuppressWarnings("unused")
         public Map<String, Object> getMethodReferences(
                         @ToolParam(description = "Signature of the method to be searched") String methodSignature) {
                 MethodImpactResponse response = mcpImpactService.getFullMethodImpact(methodSignature);
@@ -61,6 +63,7 @@ public class ElementReferenceController {
          */
         @Tool(description = "Returns hierarchical structure showing all usages of the class. " +
                         "Gets full transitive impact analysis for the class.", resultConverter = ToonCallResultConverter.class)
+        @SuppressWarnings("unused")
         public Map<String, Object> getClassReferences(
                         @ToolParam(description = "Name of the class to be searched") String className) {
                 ClassImpactResponse response = mcpImpactService.getFullClassImpact(className);
