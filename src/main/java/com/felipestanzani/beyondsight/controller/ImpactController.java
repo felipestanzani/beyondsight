@@ -1,7 +1,6 @@
 package com.felipestanzani.beyondsight.controller;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.FieldImpactResponse;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
@@ -31,7 +30,7 @@ public class ImpactController {
     public ResponseEntity<String> getFullFieldImpact(
             @RequestParam String fieldName,
             @RequestParam String className) {
-        FieldImpactResponse response = fieldImpactService.getFullFieldImpact(fieldName, className);
+        var response = fieldImpactService.getFullFieldImpact(fieldName, className);
         return ResponseEntity.ok(JToon.encode(response));
     }
 

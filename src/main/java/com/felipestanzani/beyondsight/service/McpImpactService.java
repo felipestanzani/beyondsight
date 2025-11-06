@@ -1,7 +1,7 @@
 package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.FieldImpactResponse;
+import com.felipestanzani.beyondsight.dto.FileResponse;
 import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
 import com.felipestanzani.beyondsight.exception.McpResourceNotFoundException;
 import com.felipestanzani.beyondsight.exception.McpInvalidParameterException;
@@ -12,6 +12,8 @@ import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * MCP-specific service layer that wraps existing impact analysis services.
@@ -38,23 +40,11 @@ public class McpImpactService {
      *                                      empty
      * @throws McpResourceNotFoundException if field or class is not found
      */
-    public FieldImpactResponse getFullFieldImpact(String fieldName, String className) {
+    public List<FileResponse> getFullFieldImpact(String fieldName, String className) {
         validateFieldName(fieldName);
         validateClassName(className);
 
-        try {
-            FieldImpactResponse response = fieldImpactService.getFullFieldImpact(fieldName, className);
-            if (response == null) {
-                throw new McpResourceNotFoundException(
-                        "No impact analysis found for field: " + fieldName + " in class: " + className);
-            }
-            return response;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException(
-                    "No impact analysis found for field: " + fieldName + " in class: " + className);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving field impact: " + e.getMessage(), e);
-        }
+        return fieldImpactService.getFullFieldImpact(fieldName, className);
     }
 
     /**

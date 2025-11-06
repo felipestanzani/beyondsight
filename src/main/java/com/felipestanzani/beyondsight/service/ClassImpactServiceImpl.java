@@ -2,7 +2,7 @@ package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.ClassImpactQueryResult;
-import com.felipestanzani.beyondsight.dto.FieldResponse;
+import com.felipestanzani.beyondsight.dto.FieldResponseOld;
 import com.felipestanzani.beyondsight.dto.ImpactedMethodResponse;
 import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.repository.java.JavaClassRepository;
@@ -74,8 +74,8 @@ public class ClassImpactServiceImpl implements ClassImpactService {
             ClassImpactResponse existing = classMap.get(classNameKey);
             if (existing != null) {
                 // Add field to existing class
-                List<FieldResponse> newFields = new ArrayList<>(existing.impactedFields());
-                newFields.add(new FieldResponse(fieldName, fieldType, impactType));
+                List<FieldResponseOld> newFields = new ArrayList<>(existing.impactedFields());
+                newFields.add(new FieldResponseOld(fieldName, fieldType, impactType));
                 classMap.put(classNameKey, new ClassImpactResponse(
                         existing.name(),
                         existing.filePath(),
@@ -89,7 +89,7 @@ public class ClassImpactServiceImpl implements ClassImpactService {
                         filePath,
                         null,
                         List.of(),
-                        List.of(new FieldResponse(fieldName, fieldType, impactType))));
+                        List.of(new FieldResponseOld(fieldName, fieldType, impactType))));
             }
         });
 
