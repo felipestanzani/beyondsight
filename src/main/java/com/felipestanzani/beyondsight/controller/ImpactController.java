@@ -1,6 +1,5 @@
 package com.felipestanzani.beyondsight.controller;
 
-import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
@@ -25,7 +24,7 @@ public class ImpactController {
      * Returns hierarchical structure showing all classes and methods affected by
      * changing the field.
      */
-    @GetMapping(value = "/field/full", produces = "text/plain")
+    @GetMapping(value = "/field/full", produces = "application/x-toon")
     public ResponseEntity<String> getFullFieldImpact(
             @RequestParam String fieldName,
             @RequestParam String className) {
@@ -38,7 +37,7 @@ public class ImpactController {
      * Returns hierarchical structure showing all classes and methods affected by
      * changing the method.
      */
-    @GetMapping(value = "/method/full", produces = "text/plain")
+    @GetMapping(value = "/method/full", produces = "application/x-toon")
     public ResponseEntity<String> getFullMethodImpact(
             @RequestParam String methodSignature,
             @RequestParam String className) {
@@ -51,10 +50,10 @@ public class ImpactController {
      * Returns hierarchical structure showing all classes and methods affected by
      * changing the class.
      */
-    @GetMapping("/class/full")
-    public ResponseEntity<ClassImpactResponse> getFullClassImpact(
+    @GetMapping(value = "/class/full", produces = "application/x-toon")
+    public ResponseEntity<String> getFullClassImpact(
             @RequestParam String className) {
-        ClassImpactResponse response = classImpactService.getFullClassImpact(className);
-        return ResponseEntity.ok(response);
+        var response = classImpactService.getFullClassImpact(className);
+        return ResponseEntity.ok(JToon.encode(response));
     }
 }

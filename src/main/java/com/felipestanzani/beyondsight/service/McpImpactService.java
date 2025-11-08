@@ -1,11 +1,8 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.FileResponse;
 import com.felipestanzani.beyondsight.exception.McpResourceNotFoundException;
 import com.felipestanzani.beyondsight.exception.McpInvalidParameterException;
-import com.felipestanzani.beyondsight.exception.McpInternalErrorException;
-import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
@@ -70,20 +67,10 @@ public class McpImpactService {
      * @throws McpInvalidParameterException if className is null or empty
      * @throws McpResourceNotFoundException if class is not found
      */
-    public ClassImpactResponse getFullClassImpact(String className) {
+    public List<FileResponse> getFullClassImpact(String className) {
         validateClassName(className);
 
-        try {
-            ClassImpactResponse response = classImpactService.getFullClassImpact(className);
-            if (response == null) {
-                throw new McpResourceNotFoundException("No impact analysis found for class: " + className);
-            }
-            return response;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No impact analysis found for class: " + className);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving class impact: " + e.getMessage(), e);
-        }
+        return classImpactService.getFullClassImpact(className);
     }
 
     // Validation helper methods

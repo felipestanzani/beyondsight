@@ -1,6 +1,5 @@
 package com.felipestanzani.beyondsight.controller;
 
-import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
 import com.felipestanzani.beyondsight.dto.FileResponse;
 import com.felipestanzani.beyondsight.execution.ToonCallResultConverter;
 import com.felipestanzani.beyondsight.service.McpImpactService;
@@ -10,16 +9,12 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ElementReferenceController {
-
-        private static final String RESULT = "result";
 
         private final McpImpactService mcpImpactService;
 
@@ -59,13 +54,8 @@ public class ElementReferenceController {
         @Tool(description = "Returns hierarchical structure showing all usages of the class. " +
                         "Gets full transitive impact analysis for the class.", resultConverter = ToonCallResultConverter.class)
         @SuppressWarnings("unused")
-        public Map<String, Object> getClassReferences(
+        public List<FileResponse> getClassReferences(
                         @ToolParam(description = "Name of the class to be searched") String className) {
-                ClassImpactResponse response = mcpImpactService.getFullClassImpact(className);
-
-                Map<String, Object> mcpResponse = new HashMap<>();
-                mcpResponse.put(RESULT, response);
-
-                return mcpResponse;
+                return mcpImpactService.getFullClassImpact(className);
         }
 }
