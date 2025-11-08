@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight;
 
-import com.felipestanzani.beyondsight.controller.ImpactMcpController;
+import com.felipestanzani.beyondsight.controller.ElementReferenceController;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +15,7 @@ public class BeyondSightApplication {
     }
 
     @Bean
-    public ToolCallbackProvider toolCallbackProvider(ImpactMcpController impactMcpController) {
+    public ToolCallbackProvider toolCallbackProvider(ElementReferenceController impactMcpController) {
         return MethodToolCallbackProvider.builder().toolObjects(impactMcpController).build();
     }
 }

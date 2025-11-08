@@ -1,0 +1,48 @@
+package com.felipestanzani.beyondsight.model.element;
+
+import com.felipestanzani.beyondsight.model.relationship.NodeRelationship;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.neo4j.core.schema.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Node("Method") //{"Method", "Constructor", "Initializer"}
+public class MemberNode implements Element {
+    @Id
+    private String signature;
+
+    private String name;
+
+    @Relationship(type = "CALLS")
+    private List<NodeRelationship> calledMethods = new ArrayList<>();
+
+    @Relationship(type = "READS")
+    private List<NodeRelationship> readFields = new ArrayList<>();
+
+    @Relationship(type = "WRITES")
+    private List<NodeRelationship> writtenFields = new ArrayList<>();
+
+    public MemberNode(String name, String signature) {
+        this.name = name;
+        this.signature = signature;
+    }
+
+    @Override
+    public String toString() {
+        return "MemberNode{" +
+                "name='" + name + '\'' +
+                ", signature='" + signature + '\'' +
+                ", calledMethods=" + calledMethods +
+                ", readFields=" + readFields +
+                ", writtenFields=" + writtenFields +
+                '}';
+    }
+}

@@ -1,7 +1,9 @@
 package com.felipestanzani.beyondsight.service.interfaces;
 
-import com.felipestanzani.beyondsight.dto.FieldImpactResponse;
+import com.felipestanzani.beyondsight.dto.FileResponse;
+
+import java.util.List;
 
 public interface FieldImpactService {
-    FieldImpactResponse getFullFieldImpact(String fieldName, String className);
+    List<FileResponse> getFullFieldImpact(String fieldName, String className);
 }

@@ -1,7 +1,9 @@
 package com.felipestanzani.beyondsight.service.interfaces;
 
-import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
+import com.felipestanzani.beyondsight.dto.FileResponse;
+
+import java.util.List;
 
 public interface ClassImpactService {
-    ClassImpactResponse getFullClassImpact(String className);
+    List<FileResponse> getFullClassImpact(String className);
 }

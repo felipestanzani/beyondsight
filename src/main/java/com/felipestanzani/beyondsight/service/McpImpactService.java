@@ -1,17 +1,15 @@
 package com.felipestanzani.beyondsight.service;
 
-import com.felipestanzani.beyondsight.dto.ClassImpactResponse;
-import com.felipestanzani.beyondsight.dto.FieldImpactResponse;
-import com.felipestanzani.beyondsight.dto.MethodImpactResponse;
+import com.felipestanzani.beyondsight.dto.FileResponse;
 import com.felipestanzani.beyondsight.exception.McpResourceNotFoundException;
 import com.felipestanzani.beyondsight.exception.McpInvalidParameterException;
-import com.felipestanzani.beyondsight.exception.McpInternalErrorException;
-import com.felipestanzani.beyondsight.exception.ResourceNotFoundException;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * MCP-specific service layer that wraps existing impact analysis services.
@@ -38,23 +36,11 @@ public class McpImpactService {
      *                                      empty
      * @throws McpResourceNotFoundException if field or class is not found
      */
-    public FieldImpactResponse getFullFieldImpact(String fieldName, String className) {
+    public List<FileResponse> getFullFieldImpact(String fieldName, String className) {
         validateFieldName(fieldName);
         validateClassName(className);
 
-        try {
-            FieldImpactResponse response = fieldImpactService.getFullFieldImpact(fieldName, className);
-            if (response == null) {
-                throw new McpResourceNotFoundException(
-                        "No impact analysis found for field: " + fieldName + " in class: " + className);
-            }
-            return response;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException(
-                    "No impact analysis found for field: " + fieldName + " in class: " + className);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving field impact: " + e.getMessage(), e);
-        }
+        return fieldImpactService.getFullFieldImpact(fieldName, className);
     }
 
     /**
@@ -66,20 +52,10 @@ public class McpImpactService {
      * @throws McpInvalidParameterException if methodSignature is null or empty
      * @throws McpResourceNotFoundException if method is not found
      */
-    public MethodImpactResponse getFullMethodImpact(String methodSignature) {
+    public List<FileResponse> getFullMethodImpact(String methodSignature, String className) {
         validateMethodSignature(methodSignature);
 
-        try {
-            MethodImpactResponse response = methodImpactService.getFullMethodImpact(methodSignature);
-            if (response == null) {
-                throw new McpResourceNotFoundException("No impact analysis found for method: " + methodSignature);
-            }
-            return response;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No impact analysis found for method: " + methodSignature);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving method impact: " + e.getMessage(), e);
-        }
+        return methodImpactService.getFullMethodImpact(methodSignature, className);
     }
 
     /**
@@ -91,20 +67,10 @@ public class McpImpactService {
      * @throws McpInvalidParameterException if className is null or empty
      * @throws McpResourceNotFoundException if class is not found
      */
-    public ClassImpactResponse getFullClassImpact(String className) {
+    public List<FileResponse> getFullClassImpact(String className) {
         validateClassName(className);
 
-        try {
-            ClassImpactResponse response = classImpactService.getFullClassImpact(className);
-            if (response == null) {
-                throw new McpResourceNotFoundException("No impact analysis found for class: " + className);
-            }
-            return response;
-        } catch (ResourceNotFoundException _) {
-            throw new McpResourceNotFoundException("No impact analysis found for class: " + className);
-        } catch (Exception e) {
-            throw new McpInternalErrorException("Error retrieving class impact: " + e.getMessage(), e);
-        }
+        return classImpactService.getFullClassImpact(className);
     }
 
     // Validation helper methods

@@ -1,4 +1,4 @@
-package com.felipestanzani.beyondsight.model.element.interfaces;
+package com.felipestanzani.beyondsight.model.element;
 
 import org.springframework.data.neo4j.core.schema.Node;
 

@@ -1,0 +1,40 @@
+package com.felipestanzani.beyondsight.model.element;
+
+import com.felipestanzani.beyondsight.model.relationship.NodeRelationship;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.neo4j.core.schema.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Node("Class")//{"Class", "Interface", "Enum", "Record", "AnnotationType"}
+public class TypeNode implements Element {
+    @Id
+    private String name;
+
+    @Relationship(type = "HAS_FIELD")
+    private List<NodeRelationship> fields = new ArrayList<>();
+
+    @Relationship(type = "CONTAINS")
+    private List<NodeRelationship> methods = new ArrayList<>();
+
+    public TypeNode(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "TypeNode{" +
+                "name='" + name + '\'' +
+                ", fields=" + fields +
+                ", methods=" + methods +
+                '}';
+    }
+}
