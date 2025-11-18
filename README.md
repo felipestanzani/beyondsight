@@ -108,7 +108,7 @@ This will start Neo4j on:
 ./gradlew bootRun
 ```
 
-The application will start on `http://localhost:8080`
+The application will start on `http://localhost:321`
 
 ### 4. Configure MCP Server in Cursor (Optional)
 
@@ -116,7 +116,7 @@ To use BeyondSight's impact analysis tools directly within Cursor AI, you can co
 
 #### Step 1: Ensure the Application is Running
 
-Make sure BeyondSight is running on `http://localhost:8080` (see step 3 above).
+Make sure BeyondSight is running on `http://localhost:321` (see step 3 above).
 
 #### Step 2: Configure Cursor MCP Settings
 
@@ -125,22 +125,16 @@ Make sure BeyondSight is running on `http://localhost:8080` (see step 3 above).
 
 ```json
 {
-  "mcpServers": {
-    "beyondsight-mcp-server": {
-      "transport": "sse",
-      "url": "http://localhost:8080/sse",
-      "capabilities": {
-        "tool": true
-      },
-      "name": "beyondsight-mcp-server",
-      "version": "1.0.0",
-      "type": "SYNC",
-      "instructions": "This server provides code impact change information",
-      "sse-message-endpoint": "http://localhost:8080/mcp/message",
-      "heartbeatIntervalMs": 15000,
-      "reconnectAttempts": 5
+    "mcpServers": {
+        "beyondsight-mcp-server": {
+            "transport": "sse",
+            "url": "http://localhost:321/sse",
+            "capabilities": {
+                "tool": true
+            },
+            "name": "beyondsight-mcp-server"
+        }
     }
-  }
 }
 ```
 

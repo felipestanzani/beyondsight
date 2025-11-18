@@ -2,17 +2,11 @@
     "mcpServers": {
         "beyondsight-mcp-server": {
             "transport": "sse",
-            "url": "http://localhost:8080/sse",
+            "url": "http://localhost:321/sse",
             "capabilities": {
                 "tool": true
             },
-            "name": "beyondsight-mcp-server",
-            "version": "1.0.0",
-            "type": "SYNC",
-            "instructions": "This server provides code impact change information",
-            "sse-message-endpoint": "http://localhost:8080/mcp/message",
-            "heartbeatIntervalMs": 15000,
-            "reconnectAttempts": 5
+            "name": "beyondsight-mcp-server"
         }
     }
 }
