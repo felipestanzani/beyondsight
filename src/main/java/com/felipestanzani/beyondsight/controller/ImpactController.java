@@ -1,9 +1,7 @@
 package com.felipestanzani.beyondsight.controller;
 
-import com.felipestanzani.beyondsight.dto.Symbol;
 import com.felipestanzani.beyondsight.service.interfaces.ClassImpactService;
 import com.felipestanzani.beyondsight.service.interfaces.FieldImpactService;
-import com.felipestanzani.beyondsight.service.interfaces.JdtService;
 import com.felipestanzani.beyondsight.service.interfaces.MethodImpactService;
 import com.felipestanzani.jtoon.JToon;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/impact")
@@ -22,7 +18,6 @@ public class ImpactController {
     private final FieldImpactService fieldImpactService;
     private final MethodImpactService methodImpactService;
     private final ClassImpactService classImpactService;
-    private final JdtService jdt;
 
     /**
      * Gets full transitive impact analysis for a field.
@@ -61,7 +56,7 @@ public class ImpactController {
         var response = classImpactService.getFullClassImpact(className);
         return ResponseEntity.ok(JToon.encode(response));
     }
-
+    /*
     @GetMapping("/resolve")
     public Symbol resolve(@RequestParam String name) throws Exception {
         return jdt.resolve(name);
@@ -86,5 +81,5 @@ public class ImpactController {
     public List<Symbol> search(@RequestParam String text) throws Exception {
         // Use Open Resource style search
         return jdt.workspaceSearch(text);
-    }
+    } */
 }

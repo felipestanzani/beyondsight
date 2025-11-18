@@ -2,6 +2,7 @@ package com.felipestanzani.beyondsight.service;
 
 import com.felipestanzani.beyondsight.service.interfaces.ParsingService;
 import com.felipestanzani.beyondsight.service.interfaces.ParsingServiceFactory;
+import com.google.common.io.Files;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class ParsingServiceFactoryImpl implements ParsingServiceFactory {
     }
 
     public ParsingService forFile(Path file) {
-        String ext = com.google.common.io.Files.getFileExtension(
+        String ext = Files.getFileExtension(
                 file.getFileName().toString()).toLowerCase();
         return forLanguage(ext);
     }
