@@ -1,6 +1,6 @@
 package com.felipestanzani.beyondsight.service.interfaces;
 
-import com.github.javaparser.ast.expr.Expression;
+import spoon.reflect.code.CtExpression;
 
 import java.nio.file.Path;
 
@@ -9,5 +9,5 @@ public interface ParsingService {
 
     void parseFile(Path javaFile);
 
-    String getNodeName(Expression expression);
+    String getNodeName(CtExpression<?> expression);
 }
