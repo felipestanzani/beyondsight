@@ -29,6 +29,20 @@ ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
 
+configurations.configureEach {
+	resolutionStrategy {
+		eachDependency { DependencyResolveDetails details ->
+			// Override Netty version to fix sun.misc.Unsafe deprecation warning on Java 25
+			// Exclude netty-tcnative-classes as it uses a different versioning scheme
+			if (details.requested.group == 'io.netty' && 
+			    details.requested.name.startsWith('netty-') && 
+			    !details.requested.name.startsWith('netty-tcnative')) {
+				details.useVersion '4.1.121.Final'
+			}
+		}
+	}
+}
+
 dependencies {
     implementation 'fr.inria.gforge.spoon:spoon-core:11.2.1'
 
@@ -43,7 +57,7 @@ dependencies {
     implementation 'tools.jackson.core:jackson-databind:3.0.2'
     implementation 'com.felipestanzani:jtoon:0.1.2'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
