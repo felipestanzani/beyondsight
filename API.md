@@ -70,13 +70,13 @@ GET /api/v1/impact/class/full?className=ClassName
 ### 1. Index a Java Project
 
 ```bash
-curl -X POST "http://localhost:8080/api/v1/index/rescan?path=/Users/username/my-java-project"
+curl -X POST "http://localhost:321/api/v1/index/rescan?path=/Users/username/my-java-project"
 ```
 
 ### 2. Check Parse Status
 
 ```bash
-curl "http://localhost:8080/api/v1/index/status"
+curl "http://localhost:321/api/v1/index/status"
 ```
 
 ### 3. Impact Analysis Examples
@@ -84,18 +84,17 @@ curl "http://localhost:8080/api/v1/index/status"
 #### Get Full Field Impact Analysis
 
 ```bash
-curl "http://localhost:8080/api/v1/impact/field/full?fieldName=userName&className=UserService"
+curl "http://localhost:321/api/v1/impact/field/full?fieldName=userName&className=UserService"
 ```
 
 #### Get Full Method Impact Analysis
 
 ```bash
-curl "http://localhost:8080/api/v1/impact/method/full?methodSignature=calculateTotal()"
+curl "http://localhost:321/api/v1/impact/method/full?methodSignature=calculateTotal()"
 ```
 
 #### Get Full Class Impact Analysis
 
 ```bash
-curl "http://localhost:8080/api/v1/impact/class/full?className=UserService"
+curl "http://localhost:321/api/v1/impact/class/full?className=UserService"
 ```
-

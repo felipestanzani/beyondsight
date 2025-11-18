@@ -56,4 +56,30 @@ public class ImpactController {
         var response = classImpactService.getFullClassImpact(className);
         return ResponseEntity.ok(JToon.encode(response));
     }
+    /*
+    @GetMapping("/resolve")
+    public Symbol resolve(@RequestParam String name) throws Exception {
+        return jdt.resolve(name);
+    }
+
+    @GetMapping("/references")
+    public List<Symbol> refs(@RequestParam String name) throws Exception {
+        return jdt.references(name);
+    }
+
+    @GetMapping("/callers")
+    public List<Symbol> callers(@RequestParam String name) throws Exception {
+        return jdt.callers(name);
+    }
+
+    @GetMapping("/callees")
+    public List<Symbol> callees(@RequestParam String name) throws Exception {
+        return jdt.callees(name);
+    }
+
+    @GetMapping("/search")
+    public List<Symbol> search(@RequestParam String text) throws Exception {
+        // Use Open Resource style search
+        return jdt.workspaceSearch(text);
+    } */
 }

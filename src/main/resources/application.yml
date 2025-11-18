@@ -1,3 +1,6 @@
+server:
+  port: 321
+
 spring:
   application:
     name: beyondsight

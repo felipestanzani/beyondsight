@@ -6,7 +6,7 @@ The best friend of the modern developer pocket!
 
 **Stop forcing your AI to guess. Start giving it answers.**
 
-When you ask an AI assistant ("What happens if I change this method?"), it kicks off a slow, expensive, and unreliable process. The LLM simulates a brute-force `grep` search, burning thousands of API tokens 💸 to read files and *guess* your code's structure. This leads to high API bills and missed dependencies.
+When you ask an AI assistant ("What happens if I change this method?"), it kicks off a slow, expensive, and unreliable process. The LLM uses a brute-force `grep` search, burning thousands of API tokens 💸 to read files and *guess* your code's structure. This leads to high API bills and missed dependencies.
 
 BeyondSight is a **precision-guided context provider** for AI-driven development. It acts as the "impact analysis brain" for your AI.
 
@@ -58,7 +58,7 @@ While the primary focus is serving LLMs via MCP, the powerful graph queries are 
 
 * **Primary MCP Server for LLMs**: The core of the project. Provides a high-speed Model Context Protocol (MCP) server that allows AI assistants (like Cursor) to ask questions and receive instant impact analysis.
 * **Pre-configured AI Tools**: Ships with ready-to-use MCP tools (`getClassImpact`, `getMethodImpact`, `getFieldImpact`) so the AI can immediately perform analysis without complex setup.
-* **Deep Graph Database Analysis**: Automatically parses all Java source code and stores the *entire* codebase structure (classes, methods, fields, and their relationships) in a Neo4j graph database.
+* **Deep Graph Database Analysis**: Automatically parses all Java source code using Eclipse JDT-based parsing (via Spoon) for enhanced accuracy and stores the *entire* codebase structure (classes, methods, fields, and their relationships) in a Neo4j graph database.
 * **Full Transitive Dependency Tracking**: The graph model allows for instant discovery of *all* affected code paths, including multi-level "hidden" dependencies that primitive, file-based searches would miss.
 * **Precise, Hierarchical Impact Reports**: Queries return structured, hierarchical reports of all affected classes and methods—**with exact line numbers**—in a format that is perfect for an AI to parse and act upon.
 * **Secondary REST API Access**: Includes a comprehensive REST API for programmatic access to the impact analysis engine, allowing integration with non-MCP tools or custom developer scripts.
@@ -70,7 +70,7 @@ For detailed API documentation, see [API.md](API.md).
 * **Spring Boot** 4.0.0-RC1
 * **Java** 25
 * **Neo4j** Graph Database
-* **JavaParser** 3.27.1 for Java code parsing
+* **Spoon** 11.2.1 (Eclipse JDT-based) for Java code parsing
 * **Gradle** Build System
 * **Docker Compose** for Neo4j setup
 
@@ -108,7 +108,7 @@ This will start Neo4j on:
 ./gradlew bootRun
 ```
 
-The application will start on `http://localhost:8080`
+The application will start on `http://localhost:321`
 
 ### 4. Configure MCP Server in Cursor (Optional)
 
@@ -116,7 +116,7 @@ To use BeyondSight's impact analysis tools directly within Cursor AI, you can co
 
 #### Step 1: Ensure the Application is Running
 
-Make sure BeyondSight is running on `http://localhost:8080` (see step 3 above).
+Make sure BeyondSight is running on `http://localhost:321` (see step 3 above).
 
 #### Step 2: Configure Cursor MCP Settings
 
@@ -125,22 +125,16 @@ Make sure BeyondSight is running on `http://localhost:8080` (see step 3 above).
 
 ```json
 {
-  "mcpServers": {
-    "beyondsight-mcp-server": {
-      "transport": "sse",
-      "url": "http://localhost:8080/sse",
-      "capabilities": {
-        "tool": true
-      },
-      "name": "beyondsight-mcp-server",
-      "version": "1.0.0",
-      "type": "SYNC",
-      "instructions": "This server provides code impact change information",
-      "sse-message-endpoint": "http://localhost:8080/mcp/message",
-      "heartbeatIntervalMs": 15000,
-      "reconnectAttempts": 5
+    "mcpServers": {
+        "beyondsight-mcp-server": {
+            "transport": "sse",
+            "url": "http://localhost:321/sse",
+            "capabilities": {
+                "tool": true
+            },
+            "name": "beyondsight-mcp-server"
+        }
     }
-  }
 }
 ```
 
@@ -185,6 +179,9 @@ These tools will automatically be available in Cursor's AI assistant and can ana
 The application configuration is in `src/main/resources/application.yml`:
 
 ```yaml
+server:
+  port: 321
+
 spring:
   application:
     name: beyondsight
