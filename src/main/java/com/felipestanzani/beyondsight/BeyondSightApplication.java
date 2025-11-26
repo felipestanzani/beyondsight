@@ -15,7 +15,7 @@ public class BeyondSightApplication {
     }
 
     @Bean
-    public ToolCallbackProvider toolCallbackProvider(ElementReferenceController impactMcpController) {
-        return MethodToolCallbackProvider.builder().toolObjects(impactMcpController).build();
+    public ToolCallbackProvider toolCallbackProvider(ElementReferenceController elementReferenceController) {
+        return MethodToolCallbackProvider.builder().toolObjects(elementReferenceController).build();
     }
 }
